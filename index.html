@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Orden de la Tortuga Mágica</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Verdana', sans-serif;
+      background-color: #1e1e2f;
+      color: #fff;
+      text-align: center;
+    }
+
+    .pantalla, .nivel {
+      display: none;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .activo {
+      display: flex;
+    }
+
+    h1, h2 {
+      text-shadow: 2px 2px #000;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #3c3f58;
+      color: #fff;
+      border: 2px solid #f0c674;
+      border-radius: 8px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      background-color: #505372;
+    }
+
+    .mapa {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .nivel-btn {
+      width: 100px;
+      height: 100px;
+      background-color: #222;
+      border: 2px solid #f0c674;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-weight: bold;
+    }
+
+    .insignias {
+      margin-top: 20px;
+    }
+
+    .insignia {
+      width: 60px;
+      height: 60px;
+      display: inline-block;
+      margin: 5px;
+      opacity: 0.3;
+      background-size: cover;
+    }
+
+    .insignia.activa {
+      opacity: 1;
+    }
+
+    textarea {
+      width: 80%;
+      max-width: 400px;
+      height: 100px;
+      margin-top: 10px;
+    }
+
+    canvas {
+      margin-top: 20px;
+      background: #000;
+      border: 3px solid #f0c674;
+    }
+  </style>
+</head>
+<body>
+  <!-- Pantalla de Inicio -->
+  <div id="inicio" class="pantalla activo">
+    <h1>La Orden de la Tortuga Mágica</h1>
+    <p>¡Aprendiz! El reino está en peligro. Usa tus hechizos en Python (Turtle) para salvarlo.</p>
+    <button onclick="mostrarMapa()">Comenzar Aventura</button>
+  </div>
+
+  <!-- Pantalla Mapa -->
+  <div id="mapa" class="pantalla">
+    <h2>Mapa del Reino</h2>
+    <div class="mapa">
+      <div class="nivel-btn" onclick="mostrarNivel(1)">Nivel 1<br>Movimientos</div>
+      <div class="nivel-btn" onclick="mostrarNivel(2)">Nivel 2<br>Repeticiones</div>
+      <div class="nivel-btn" onclick="mostrarNivel(3)">Nivel 3<br>Funciones</div>
+    </div>
+    <div class="insignias">
+      <div id="insignia1" class="insignia" style="background-image: url('https://i.imgur.com/2yaf2sm.png');"></div>
+      <div id="insignia2" class="insignia" style="background-image: url('https://i.imgur.com/2yaf2sm.png');"></div>
+      <div id="insignia3" class="insignia" style="background-image: url('https://i.imgur.com/2yaf2sm.png');"></div>
+    </div>
+    <button onclick="mostrarInicio()">Volver</button>
+  </div>
+
+  <!-- Niveles -->
+  <div id="nivel1" class="nivel">
+    <h2>Nivel 1: Movimientos de la Tortuga</h2>
+    <p>Escribe un hechizo para mover la tortuga hacia arriba 100 píxeles.</p>
+    <textarea id="codigo1">forward(100);</textarea>
+    <button onclick="ejecutarCodigo(1)">Ejecutar Hechizo</button>
+    <canvas id="canvas1" width="400" height="400"></canvas>
+    <button onclick="volverMapa()">Volver al Mapa</button>
+  </div>
+
+  <div id="nivel2" class="nivel">
+    <h2>Nivel 2: Repeticiones</h2>
+    <p>Usa <code>repeat</code> para dibujar un cuadrado.</p>
+    <textarea id="codigo2">repeat(4): forward(100); right(90);</textarea>
+    <button onclick="ejecutarCodigo(2)">Ejecutar Hechizo</button>
+    <canvas id="canvas2" width="400" height="400"></canvas>
+    <button onclick="volverMapa()">Volver al Mapa</button>
+  </div>
+
+  <div id="nivel3" class="nivel">
+    <h2>Nivel 3: Funciones</h2>
+    <p>Crea una función que dibuje un triángulo.</p>
+    <textarea id="codigo3">def triangulo(): forward(100); right(120); forward(100); right(120); forward(100);</textarea>
+    <button onclick="ejecutarCodigo(3)">Ejecutar Hechizo</button>
+    <canvas id="canvas3" width="400" height="400"></canvas>
+    <button onclick="volverMapa()">Volver al Mapa</button>
+  </div>
+
+  <script>
+    function mostrarMapa() {
+      document.querySelectorAll('.pantalla').forEach(el => el.classList.remove('activo'));
+      document.getElementById('mapa').classList.add('activo');
+    }
+
+    function mostrarInicio() {
+      document.querySelectorAll('.pantalla').forEach(el => el.classList.remove('activo'));
+      document.getElementById('inicio').classList.add('activo');
+    }
+
+    function mostrarNivel(n) {
+      document.querySelectorAll('.pantalla, .nivel').forEach(el => el.classList.remove('activo'));
+      document.getElementById(`nivel${n}`).classList.add('activo');
+    }
+
+    function volverMapa() {
+      document.querySelectorAll('.nivel').forEach(el => el.classList.remove('activo'));
+      document.getElementById('mapa').classList.add('activo');
+    }
+
+    function ejecutarCodigo(nivel) {
+      const canvas = document.getElementById(`canvas${nivel}`);
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'gold';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(200, 200);
+
+      if (nivel === 1) {
+        ctx.lineTo(200, 100);
+        ctx.stroke();
+        desbloquearInsignia(1);
+        alert('¡Hechizo correcto! La tortuga avanzó.');
+      }
+      if (nivel === 2) {
+        // Dibujar cuadrado
+        ctx.rect(150, 150, 100, 100);
+        ctx.stroke();
+        desbloquearInsignia(2);
+        alert('¡Hechizo correcto! Dibujaste un cuadrado.');
+      }
+      if (nivel === 3) {
+        // Dibujar triángulo
+        ctx.moveTo(200, 100);
+        ctx.lineTo(250, 200);
+        ctx.lineTo(150, 200);
+        ctx.closePath();
+        ctx.stroke();
+        desbloquearInsignia(3);
+        alert('¡Hechizo correcto! Invocaste el triángulo.');
+      }
+    }
+
+    function desbloquearInsignia(num) {
+      document.getElementById(`insignia${num}`).classList.add('activa');
+    }
+  </script>
+</body>
+</html>

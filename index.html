@@ -38,37 +38,47 @@
     <button onclick="mostrarInicio()">Volver</button>
   </div>
 
-  <!-- Niveles -->
+  <!-- Nivel 1 -->
   <div id="nivel1" class="nivel">
     <h2>Nivel 1: Movimientos de la Tortuga</h2>
     <p>Escribe un hechizo para mover la tortuga hacia arriba 100 píxeles.</p>
     <div id="editor1" class="editor-container"></div>
     <button onclick="ejecutarCodigo(1)">Ejecutar Hechizo</button>
-    <canvas id="canvas1" width="400" height="400"></canvas>
+    <div class="escenario">
+      <canvas id="canvas1" width="400" height="400"></canvas>
+      <img id="tortuga1" class="tortuga-icon" src="https://i.imgur.com/5fX5L8L.png" alt="tortuga">
+    </div>
     <button onclick="volverMapa()">Volver al Mapa</button>
   </div>
 
+  <!-- Nivel 2 -->
   <div id="nivel2" class="nivel">
     <h2>Nivel 2: Repeticiones</h2>
     <p>Usa <code>repeat</code> para dibujar un cuadrado.</p>
-    <div id="editor2"></div>
+    <div id="editor2" class="editor-container"></div>
     <button onclick="ejecutarCodigo(2)">Ejecutar Hechizo</button>
-    <canvas id="canvas2" width="400" height="400"></canvas>
+    <div class="escenario">
+      <canvas id="canvas2" width="400" height="400"></canvas>
+      <img id="tortuga2" class="tortuga-icon" src="https://i.imgur.com/5fX5L8L.png" alt="tortuga">
+    </div>
     <button onclick="volverMapa()">Volver al Mapa</button>
   </div>
 
+  <!-- Nivel 3 -->
   <div id="nivel3" class="nivel">
     <h2>Nivel 3: Funciones</h2>
     <p>Crea una función que dibuje un triángulo.</p>
-    <div id="editor3"></div>
+    <div id="editor3" class="editor-container"></div>
     <button onclick="ejecutarCodigo(3)">Ejecutar Hechizo</button>
-    <canvas id="canvas3" width="400" height="400"></canvas>
+    <div class="escenario">
+      <canvas id="canvas3" width="400" height="400"></canvas>
+      <img id="tortuga3" class="tortuga-icon" src="https://i.imgur.com/5fX5L8L.png" alt="tortuga">
+    </div>
     <button onclick="volverMapa()">Volver al Mapa</button>
   </div>
 
-  <!-- Scripts -->
   <script>
-    // Funciones de navegación
+    // Navegación
     function mostrarMapa() {
       document.querySelectorAll('.pantalla').forEach(el => el.classList.remove('activo'));
       document.getElementById('mapa').classList.add('activo');
@@ -86,7 +96,7 @@
       document.getElementById('mapa').classList.add('activo');
     }
 
-    // Inicialización CodeMirror
+    // CodeMirror
     const editor1 = CodeMirror(document.getElementById("editor1"), {
       value: "forward(100);",
       mode: "python",
@@ -105,28 +115,33 @@
       lineNumbers: true,
       theme: "dracula"
     });
+    editor1.setSize("500px", "150px");
+    editor2.setSize("500px", "150px");
+    editor3.setSize("500px", "150px");
 
-    // Ejecución de código simulada
+    // Ejecución
     function ejecutarCodigo(nivel) {
       const canvas = document.getElementById(`canvas${nivel}`);
       const ctx = canvas.getContext('2d');
+      const tortuga = document.getElementById(`tortuga${nivel}`);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.strokeStyle = 'gold';
       ctx.lineWidth = 2;
+
       ctx.beginPath();
       ctx.moveTo(200, 200);
 
       if (nivel === 1) {
         ctx.lineTo(200, 100);
         ctx.stroke();
+        tortuga.style.transform = "translateY(-100px)";
         desbloquearInsignia(1);
-        alert('¡Hechizo correcto! La tortuga avanzó.');
       }
       if (nivel === 2) {
         ctx.rect(150, 150, 100, 100);
         ctx.stroke();
+        tortuga.style.transform = "translate(-50px, -50px)";
         desbloquearInsignia(2);
-        alert('¡Hechizo correcto! Dibujaste un cuadrado.');
       }
       if (nivel === 3) {
         ctx.moveTo(200, 100);
@@ -134,18 +149,14 @@
         ctx.lineTo(150, 200);
         ctx.closePath();
         ctx.stroke();
+        tortuga.style.transform = "translate(0, -100px)";
         desbloquearInsignia(3);
-        alert('¡Hechizo correcto! Invocaste el triángulo.');
       }
     }
 
     function desbloquearInsignia(num) {
       document.getElementById(`insignia${num}`).classList.add('activa');
     }
-    editor1.setSize("500px", "150px");
-editor2.setSize("500px", "150px");
-editor3.setSize("500px", "150px");
-
   </script>
 </body>
 </html>

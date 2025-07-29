@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Orden de la Tortuga Mágica</title>
+  <!-- Estilos base -->
   <style>
     body {
       margin: 0;
@@ -84,19 +85,30 @@
       opacity: 1;
     }
 
-    textarea {
-      width: 80%;
-      max-width: 400px;
-      height: 100px;
-      margin-top: 10px;
-    }
-
+    /* Canvas */
     canvas {
       margin-top: 20px;
       background: #000;
       border: 3px solid #f0c674;
     }
+
+    /* CodeMirror */
+    .CodeMirror {
+      height: 150px;
+      width: 80%;
+      max-width: 500px;
+      font-size: 16px;
+      border: 2px solid #f0c674;
+      border-radius: 6px;
+      margin: 10px auto;
+    }
   </style>
+
+  <!-- Librerías CodeMirror -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
 </head>
 <body>
   <!-- Pantalla de Inicio -->
@@ -126,7 +138,7 @@
   <div id="nivel1" class="nivel">
     <h2>Nivel 1: Movimientos de la Tortuga</h2>
     <p>Escribe un hechizo para mover la tortuga hacia arriba 100 píxeles.</p>
-    <textarea id="codigo1">forward(100);</textarea>
+    <div id="editor1"></div>
     <button onclick="ejecutarCodigo(1)">Ejecutar Hechizo</button>
     <canvas id="canvas1" width="400" height="400"></canvas>
     <button onclick="volverMapa()">Volver al Mapa</button>
@@ -135,7 +147,7 @@
   <div id="nivel2" class="nivel">
     <h2>Nivel 2: Repeticiones</h2>
     <p>Usa <code>repeat</code> para dibujar un cuadrado.</p>
-    <textarea id="codigo2">repeat(4): forward(100); right(90);</textarea>
+    <div id="editor2"></div>
     <button onclick="ejecutarCodigo(2)">Ejecutar Hechizo</button>
     <canvas id="canvas2" width="400" height="400"></canvas>
     <button onclick="volverMapa()">Volver al Mapa</button>
@@ -144,33 +156,52 @@
   <div id="nivel3" class="nivel">
     <h2>Nivel 3: Funciones</h2>
     <p>Crea una función que dibuje un triángulo.</p>
-    <textarea id="codigo3">def triangulo(): forward(100); right(120); forward(100); right(120); forward(100);</textarea>
+    <div id="editor3"></div>
     <button onclick="ejecutarCodigo(3)">Ejecutar Hechizo</button>
     <canvas id="canvas3" width="400" height="400"></canvas>
     <button onclick="volverMapa()">Volver al Mapa</button>
   </div>
 
   <script>
+    // Inicialización de pantallas
     function mostrarMapa() {
       document.querySelectorAll('.pantalla').forEach(el => el.classList.remove('activo'));
       document.getElementById('mapa').classList.add('activo');
     }
-
     function mostrarInicio() {
       document.querySelectorAll('.pantalla').forEach(el => el.classList.remove('activo'));
       document.getElementById('inicio').classList.add('activo');
     }
-
     function mostrarNivel(n) {
       document.querySelectorAll('.pantalla, .nivel').forEach(el => el.classList.remove('activo'));
       document.getElementById(`nivel${n}`).classList.add('activo');
     }
-
     function volverMapa() {
       document.querySelectorAll('.nivel').forEach(el => el.classList.remove('activo'));
       document.getElementById('mapa').classList.add('activo');
     }
 
+    // Configurar CodeMirror
+    const editor1 = CodeMirror(document.getElementById("editor1"), {
+      value: "forward(100);",
+      mode: "python",
+      lineNumbers: true,
+      theme: "dracula"
+    });
+    const editor2 = CodeMirror(document.getElementById("editor2"), {
+      value: "repeat(4):\n    forward(100)\n    right(90)",
+      mode: "python",
+      lineNumbers: true,
+      theme: "dracula"
+    });
+    const editor3 = CodeMirror(document.getElementById("editor3"), {
+      value: "def triangulo():\n    forward(100)\n    right(120)\n    forward(100)\n    right(120)\n    forward(100)",
+      mode: "python",
+      lineNumbers: true,
+      theme: "dracula"
+    });
+
+    // Ejecución simulada de código
     function ejecutarCodigo(nivel) {
       const canvas = document.getElementById(`canvas${nivel}`);
       const ctx = canvas.getContext('2d');
@@ -187,14 +218,12 @@
         alert('¡Hechizo correcto! La tortuga avanzó.');
       }
       if (nivel === 2) {
-        // Dibujar cuadrado
         ctx.rect(150, 150, 100, 100);
         ctx.stroke();
         desbloquearInsignia(2);
         alert('¡Hechizo correcto! Dibujaste un cuadrado.');
       }
       if (nivel === 3) {
-        // Dibujar triángulo
         ctx.moveTo(200, 100);
         ctx.lineTo(250, 200);
         ctx.lineTo(150, 200);

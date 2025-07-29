@@ -101,12 +101,15 @@ button:hover {
 
 .CodeMirror {
   width: 100% !important;
+  max-width: 500px;
   min-height: 150px;
   font-size: 16px;
   border: 2px solid #f0c674;
   border-radius: 6px;
-  margin: 10px 0;
+  margin: 10px auto;
   background-color: #2e2e2e;
+  text-align: left;      /* Fuerza texto alineado a la izquierda */
+  padding-left: 10px;    /* Espaciado interior a la izquierda */
 }
 
 /* ======== ESCENARIO ======== */

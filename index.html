@@ -42,7 +42,7 @@
   <div id="nivel1" class="nivel">
     <h2>Nivel 1: Movimientos de la Tortuga</h2>
     <p>Escribe un hechizo para mover la tortuga hacia arriba 100 píxeles.</p>
-    <div id="editor1"></div>
+    <div id="editor1" class="editor-container"></div>
     <button onclick="ejecutarCodigo(1)">Ejecutar Hechizo</button>
     <canvas id="canvas1" width="400" height="400"></canvas>
     <button onclick="volverMapa()">Volver al Mapa</button>
@@ -65,7 +65,7 @@
     <canvas id="canvas3" width="400" height="400"></canvas>
     <button onclick="volverMapa()">Volver al Mapa</button>
   </div>
-<div id="editor1" class="editor-container"></div>
+
   <!-- Scripts -->
   <script>
     // Funciones de navegación
@@ -142,6 +142,10 @@
     function desbloquearInsignia(num) {
       document.getElementById(`insignia${num}`).classList.add('activa');
     }
+    editor1.setSize("500px", "150px");
+editor2.setSize("500px", "150px");
+editor3.setSize("500px", "150px");
+
   </script>
 </body>
 </html>

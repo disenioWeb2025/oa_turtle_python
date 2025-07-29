@@ -35,3 +35,15 @@ button {
   border-radius: 8px;
   margin-top: 20px;
   cursor: pointer;
+
+  /* ======== CODIGO PYTHON ======== */
+.CodeMirror {
+  width: 90% !important;
+  max-width: 500px;
+  min-height: 150px;
+  font-size: 16px;
+  border: 2px solid #f0c674;
+  border-radius: 6px;
+  margin: 10px auto;
+  background-color: #2e2e2e;
+}

@@ -7,7 +7,7 @@ body {
   text-align: center;
 }
 
-/* ======== PANTALLAS Y CONTENEDORES ======== */
+/* ======== PANTALLAS ======== */
 .pantalla, .nivel {
   display: none;
   min-height: 100vh;
@@ -43,7 +43,7 @@ button:hover {
   background-color: #505372;
 }
 
-/* ======== MAPA Y NIVELES ======== */
+/* ======== MAPA DE NIVELES ======== */
 .mapa {
   display: flex;
   justify-content: center;
@@ -91,50 +91,10 @@ button:hover {
   opacity: 1;
 }
 
-/* ======== EDITOR ======== */
-.editor-container {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: left;
-}
-
-.CodeMirror {
-  width: 100% !important;
-  max-width: 500px;
-  min-height: 150px;
-  font-size: 16px;
+/* ======== IFRAME (PAIZA.IO) ======== */
+iframe {
   border: 2px solid #f0c674;
-  border-radius: 6px;
-  margin: 10px auto;
-  background-color: #2e2e2e;
-  text-align: left;      /* Fuerza texto alineado a la izquierda */
-  padding-left: 10px;    /* Espaciado interior a la izquierda */
-}
-
-/* ======== ESCENARIO ======== */
-.escenario {
-  background-color: #20232a;
-  border: 3px solid #f0c674;
-  width: 400px;
-  height: 400px;
-  margin: 20px auto;
-  position: relative;
   border-radius: 8px;
-}
-
-.escenario canvas {
-  display: block;
-  margin: 0 auto;
-  background-color: #1b1b1b;
-}
-
-/* ======== TORTUGA ICON ======== */
-.tortuga-icon {
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  top: 190px;
-  left: 190px;
-  transition: transform 0.5s linear;
+  margin: 20px 0;
+  max-width: 800px;
 }

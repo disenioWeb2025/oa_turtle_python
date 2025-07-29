@@ -10,7 +10,7 @@ body {
 /* ======== PANTALLAS Y CONTENEDORES ======== */
 .pantalla, .nivel {
   display: none;
-  height: 100vh;
+  min-height: 100vh;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -35,15 +35,103 @@ button {
   border-radius: 8px;
   margin-top: 20px;
   cursor: pointer;
+  transition: 0.3s;
+}
 
-  /* ======== CODIGO PYTHON ======== */
-.CodeMirror {
-  width: 90% !important;
+button:hover {
+  transform: scale(1.1);
+  background-color: #505372;
+}
+
+/* ======== MAPA Y NIVELES ======== */
+.mapa {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.nivel-btn {
+  width: 120px;
+  height: 120px;
+  background-color: #222;
+  border: 2px solid #f0c674;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.nivel-btn:hover {
+  transform: scale(1.1);
+  background-color: #333;
+}
+
+/* ======== INSIGNIAS ======== */
+.insignias {
+  margin-top: 20px;
+}
+
+.insignia {
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+  margin: 5px;
+  opacity: 0.3;
+  background-size: cover;
+}
+
+.insignia.activa {
+  opacity: 1;
+}
+
+/* ======== EDITOR ======== */
+.editor-container {
+  width: 100%;
   max-width: 500px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.CodeMirror {
+  width: 100% !important;
   min-height: 150px;
   font-size: 16px;
   border: 2px solid #f0c674;
   border-radius: 6px;
-  margin: 10px auto;
+  margin: 10px 0;
   background-color: #2e2e2e;
+}
+
+/* ======== ESCENARIO ======== */
+.escenario {
+  background-color: #20232a;
+  border: 3px solid #f0c674;
+  width: 400px;
+  height: 400px;
+  margin: 20px auto;
+  position: relative;
+  border-radius: 8px;
+}
+
+.escenario canvas {
+  display: block;
+  margin: 0 auto;
+  background-color: #1b1b1b;
+}
+
+/* ======== TORTUGA ICON ======== */
+.tortuga-icon {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 190px;
+  left: 190px;
+  transition: transform 0.5s linear;
 }

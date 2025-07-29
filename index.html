@@ -5,14 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Orden de la Tortuga Mágica</title>
 
-  <!-- Hoja de estilos externa -->
+  <!-- Hoja de estilos -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- Librerías CodeMirror -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
 </head>
 <body>
   <!-- Pantalla de Inicio -->
@@ -22,7 +16,7 @@
     <button onclick="mostrarMapa()">Comenzar Aventura</button>
   </div>
 
-  <!-- Pantalla Mapa -->
+  <!-- Mapa -->
   <div id="mapa" class="pantalla">
     <h2>Mapa del Reino</h2>
     <div class="mapa">
@@ -38,42 +32,34 @@
     <button onclick="mostrarInicio()">Volver</button>
   </div>
 
-  <!-- Nivel 1 -->
+  <!-- Niveles con iframes -->
   <div id="nivel1" class="nivel">
     <h2>Nivel 1: Movimientos de la Tortuga</h2>
-    <p>Escribe un hechizo para mover la tortuga hacia arriba 100 píxeles.</p>
-    <div id="editor1" class="editor-container"></div>
-    <button onclick="ejecutarCodigo(1)">Ejecutar Hechizo</button>
-    <div class="escenario">
-      <canvas id="canvas1" width="400" height="400"></canvas>
-      <img id="tortuga1" class="tortuga-icon" src="https://i.imgur.com/5fX5L8L.png" alt="tortuga">
-    </div>
+    <p>💻 Ejecutá este código en Paiza.io y mové la tortuga hacia arriba 100 píxeles:</p>
+    <iframe src="https://paiza.io/projects/e/XXXXX?theme=chrome"
+            width="100%" height="400"
+            style="border:2px solid #f0c674; border-radius:8px;"
+            scrolling="no" seamless="seamless"></iframe>
     <button onclick="volverMapa()">Volver al Mapa</button>
   </div>
 
-  <!-- Nivel 2 -->
   <div id="nivel2" class="nivel">
     <h2>Nivel 2: Repeticiones</h2>
-    <p>Usa <code>repeat</code> para dibujar un cuadrado.</p>
-    <div id="editor2" class="editor-container"></div>
-    <button onclick="ejecutarCodigo(2)">Ejecutar Hechizo</button>
-    <div class="escenario">
-      <canvas id="canvas2" width="400" height="400"></canvas>
-      <img id="tortuga2" class="tortuga-icon" src="https://i.imgur.com/5fX5L8L.png" alt="tortuga">
-    </div>
+    <p>💻 Modificá el código para dibujar un cuadrado usando <code>for</code>:</p>
+    <iframe src="https://paiza.io/projects/e/YYYYY?theme=chrome"
+            width="100%" height="400"
+            style="border:2px solid #f0c674; border-radius:8px;"
+            scrolling="no" seamless="seamless"></iframe>
     <button onclick="volverMapa()">Volver al Mapa</button>
   </div>
 
-  <!-- Nivel 3 -->
   <div id="nivel3" class="nivel">
     <h2>Nivel 3: Funciones</h2>
-    <p>Crea una función que dibuje un triángulo.</p>
-    <div id="editor3" class="editor-container"></div>
-    <button onclick="ejecutarCodigo(3)">Ejecutar Hechizo</button>
-    <div class="escenario">
-      <canvas id="canvas3" width="400" height="400"></canvas>
-      <img id="tortuga3" class="tortuga-icon" src="https://i.imgur.com/5fX5L8L.png" alt="tortuga">
-    </div>
+    <p>💻 Creá una función <code>triangulo()</code> y dibujá un triángulo:</p>
+    <iframe src="https://paiza.io/projects/e/ZZZZZ?theme=chrome"
+            width="100%" height="400"
+            style="border:2px solid #f0c674; border-radius:8px;"
+            scrolling="no" seamless="seamless"></iframe>
     <button onclick="volverMapa()">Volver al Mapa</button>
   </div>
 
@@ -94,69 +80,6 @@
     function volverMapa() {
       document.querySelectorAll('.nivel').forEach(el => el.classList.remove('activo'));
       document.getElementById('mapa').classList.add('activo');
-    }
-
-    // CodeMirror
-    
-    const editor1 = CodeMirror(document.getElementById("editor1"), {
-      value: "forward(100);",
-      mode: "python",
-      lineNumbers: true,
-      theme: "dracula"
-    });
-    const editor2 = CodeMirror(document.getElementById("editor2"), {
-      value: "repeat(4):\n    forward(100)\n    right(90)",
-      mode: "python",
-      lineNumbers: true,
-      theme: "dracula"
-    });
-    const editor3 = CodeMirror(document.getElementById("editor3"), {
-      value: "def triangulo():\n    forward(100)\n    right(120)\n    forward(100)\n    right(120)\n    forward(100)",
-      mode: "python",
-      lineNumbers: true,
-      theme: "dracula"
-    });
-    editor1.setSize("500px", "150px");
-    editor2.setSize("500px", "150px");
-    editor3.setSize("500px", "150px");
-
-    // Ejecución
-    function ejecutarCodigo(nivel) {
-      const canvas = document.getElementById(`canvas${nivel}`);
-      const ctx = canvas.getContext('2d');
-      const tortuga = document.getElementById(`tortuga${nivel}`);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = 'gold';
-      ctx.lineWidth = 2;
-
-      ctx.beginPath();
-      ctx.moveTo(200, 200);
-
-      if (nivel === 1) {
-        ctx.lineTo(200, 100);
-        ctx.stroke();
-        tortuga.style.transform = "translateY(-100px)";
-        desbloquearInsignia(1);
-      }
-      if (nivel === 2) {
-        ctx.rect(150, 150, 100, 100);
-        ctx.stroke();
-        tortuga.style.transform = "translate(-50px, -50px)";
-        desbloquearInsignia(2);
-      }
-      if (nivel === 3) {
-        ctx.moveTo(200, 100);
-        ctx.lineTo(250, 200);
-        ctx.lineTo(150, 200);
-        ctx.closePath();
-        ctx.stroke();
-        tortuga.style.transform = "translate(0, -100px)";
-        desbloquearInsignia(3);
-      }
-    }
-
-    function desbloquearInsignia(num) {
-      document.getElementById(`insignia${num}`).classList.add('activa');
     }
   </script>
 </body>

@@ -185,10 +185,13 @@
             border-radius: 8px;
             margin-top: 10px;
             border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .input-section input {
-            width: 100%;
+            flex: 1;
             padding: 8px 12px;
             background: #2a2a2a;
             border: 1px solid #555;
@@ -205,12 +208,82 @@
 
         .input-section .input-prompt {
             color: #ffffff;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .input-section .input-button {
+            padding: 6px 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 12px;
-            margin-bottom: 5px;
+        }
+
+        .input-section .input-button:hover {
+            background: #45a049;
         }
 
         .input-hidden {
             display: none;
+        }
+
+        /* Turtle canvas flotante y más grande */
+        #turtle-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            display: none;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 0;
+        }
+        
+        #turtle-canvas {
+            border: 3px solid #2196F3;
+            border-radius: 6px;
+            background-color: white !important;
+            display: block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .canvas-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .canvas-close-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+        }
+
+        .canvas-close-btn:hover {
+            background: #d32f2f;
         }
 
         .btn {
@@ -429,10 +502,18 @@ Ejecuta tu código para ver la salida...</div>
                 <div id="input-section" class="input-section input-hidden">
                     <div class="input-prompt" id="input-prompt">Introduce un valor:</div>
                     <input type="text" id="input-field" placeholder="Escribe aquí tu respuesta...">
+                    <button class="input-button" onclick="submitInput()">Enviar</button>
                 </div>
-                <canvas id="turtle-canvas" width="400" height="300"></canvas>
             </div>
         </div>
+        
+    </div>
+
+    <!-- Canvas flotante para turtle -->
+    <div class="canvas-overlay" id="canvas-overlay" onclick="closeTurtleCanvas()"></div>
+    <div id="turtle-container">
+        <canvas id="turtle-canvas" width="800" height="600" style="border: 3px solid #2196F3; background: white; display: block;"></canvas>
+        <button class="canvas-close-btn" onclick="closeTurtleCanvas()">×</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
@@ -466,18 +547,37 @@ import js
 
 class Turtle:
     def __init__(self):
-        self.canvas = js.document.getElementById('turtle-canvas')
-        self.ctx = self.canvas.getContext('2d')
-        self.x = 200
-        self.y = 150
+        self.x = 400  # Centro del canvas más grande
+        self.y = 300
         self.angle = 0
         self.pen_down = True
-        self.canvas.style.display = 'block'
-        self.ctx.clearRect(0, 0, 400, 300)
-        self.ctx.strokeStyle = 'black'
+        self.canvas = None
+        self.ctx = None
+        
+    def _ensure_canvas(self):
+        # Siempre mostrar el canvas cuando se use cualquier función turtle
+        js.showTurtleCanvas()
+        
+        if self.canvas is None:
+            self.canvas = js.document.getElementById('turtle-canvas')
+            self.ctx = self.canvas.getContext('2d')
+            # Solo limpiar el canvas la primera vez que se inicializa
+            self.ctx.fillStyle = 'white'
+            self.ctx.fillRect(0, 0, 800, 600)
+            # Configurar estilo inicial de dibujo
+            self.ctx.strokeStyle = 'black'
+            self.ctx.lineWidth = 2
+            self.current_color = 'black'
+            print("Canvas turtle inicializado correctamente")
+        
+        # Mantener el color actual
+        if hasattr(self, 'current_color'):
+            self.ctx.strokeStyle = self.current_color
         self.ctx.lineWidth = 2
         
     def forward(self, distance):
+        self._ensure_canvas()
+        
         new_x = self.x + distance * math.cos(math.radians(self.angle))
         new_y = self.y + distance * math.sin(math.radians(self.angle))
         
@@ -506,24 +606,39 @@ class Turtle:
         self.pen_down = True
     
     def goto(self, x, y):
+        self._ensure_canvas()
         if self.pen_down:
             self.ctx.beginPath()
             self.ctx.moveTo(self.x, self.y)
-            self.ctx.lineTo(x + 200, y + 150)  # Ajustar coordenadas al canvas
+            self.ctx.lineTo(x + 400, 300 - y)
             self.ctx.stroke()
-        self.x = x + 200  # Ajustar al centro del canvas
-        self.y = y + 150
+        self.x = x + 400
+        self.y = 300 - y
     
     def circle(self, radius):
+        self._ensure_canvas()
         self.ctx.beginPath()
-        self.ctx.arc(self.x, self.y, radius, 0, 2 * math.pi)
+        self.ctx.arc(self.x, self.y, abs(radius), 0, 2 * math.pi)
         self.ctx.stroke()
     
     def color(self, color):
-        self.ctx.strokeStyle = color
+        self._ensure_canvas()
+        self.current_color = str(color)
+        self.ctx.strokeStyle = self.current_color
+        self.ctx.fillStyle = self.current_color
+        print(f"Color cambiado a: {color}")
     
     def clear(self):
-        self.ctx.clearRect(0, 0, 400, 300)
+        self._ensure_canvas()
+        self.ctx.fillStyle = 'white'
+        self.ctx.fillRect(0, 0, 800, 600)
+        # Resetear a color negro por defecto
+        self.current_color = 'black'
+        self.ctx.strokeStyle = self.current_color
+        self.ctx.lineWidth = 2
+        self.x = 400
+        self.y = 300
+        self.angle = 0
 
 # Global turtle instance
 _turtle = Turtle()
@@ -577,34 +692,100 @@ pd = pendown
             return turtleModule;
         }
 
-        // Función JavaScript para manejar input() - aparece abajo de la salida
+        // Variables globales para input
+        let inputResolver = null;
+        
+        // Función para mostrar input integrado
+        function showInputSection(promptText) {
+            const inputSection = document.getElementById('input-section');
+            const inputPrompt = document.getElementById('input-prompt');
+            const inputField = document.getElementById('input-field');
+            
+            inputPrompt.textContent = promptText || "Introduce un valor:";
+            inputField.value = "";
+            inputSection.classList.remove('input-hidden');
+            inputField.focus();
+        }
+        
+        // Función para enviar input
+        function submitInput() {
+            const inputField = document.getElementById('input-field');
+            const inputSection = document.getElementById('input-section');
+            const outputElement = document.getElementById('output');
+            
+            const value = inputField.value;
+            
+            // Mostrar la respuesta en la salida para integración visual
+            if (outputElement && value) {
+                const currentText = outputElement.textContent;
+                if (currentText && !currentText.endsWith('\n')) {
+                    outputElement.textContent += ' ' + value + '\n';
+                } else {
+                    outputElement.textContent += value + '\n';
+                }
+            }
+            
+            inputSection.classList.add('input-hidden');
+            
+            if (inputResolver) {
+                inputResolver(value);
+                inputResolver = null;
+            }
+        }
+        
+        // Función Python input que usa la interfaz integrada
         window.pythonInput = function(promptText) {
             return new Promise((resolve) => {
-                const inputSection = document.getElementById('input-section');
-                const inputPrompt = document.getElementById('input-prompt');
+                inputResolver = resolve;
+                showInputSection(promptText);
+                
+                // También permitir enviar con Enter
                 const inputField = document.getElementById('input-field');
-                
-                inputPrompt.textContent = promptText || "Introduce un valor:";
-                inputField.value = "";
-                inputSection.classList.remove('input-hidden');
-                inputField.focus();
-                
-                const handleSubmit = () => {
-                    const value = inputField.value;
-                    inputSection.classList.add('input-hidden');
-                    inputField.removeEventListener('keypress', handleKeyPress);
-                    resolve(value);
-                };
-                
                 const handleKeyPress = (e) => {
                     if (e.key === 'Enter') {
-                        handleSubmit();
+                        inputField.removeEventListener('keypress', handleKeyPress);
+                        submitInput();
                     }
                 };
-                
                 inputField.addEventListener('keypress', handleKeyPress);
             });
         };
+        
+        // Funciones para canvas turtle flotante
+        function showTurtleCanvas() {
+            console.log('Mostrando canvas turtle...');
+            const container = document.getElementById('turtle-container');
+            const overlay = document.getElementById('canvas-overlay');
+            const canvas = document.getElementById('turtle-canvas');
+            
+            if (container && overlay && canvas) {
+                container.style.display = 'block';
+                overlay.style.display = 'block';
+                console.log('Canvas container mostrado:', container.style.display);
+                console.log('Canvas dimensiones:', canvas.width, 'x', canvas.height);
+            } else {
+                console.error('No se encontraron elementos del canvas');
+            }
+        }
+        
+        function closeTurtleCanvas() {
+            console.log('Cerrando canvas turtle...');
+            document.getElementById('turtle-container').style.display = 'none';
+            document.getElementById('canvas-overlay').style.display = 'none';
+            // Resetear las referencias del canvas para que se pueda reinicializar
+            if (window.pyodide && pyodide.runPython) {
+                try {
+                    pyodide.runPython(`
+if '_turtle' in globals():
+    _turtle.canvas = None
+    _turtle.ctx = None
+    print("Canvas reseteado para próxima ejecución")
+                    `);
+                } catch (e) {
+                    console.log('Error al resetear canvas:', e);
+                }
+            }
+        }
 
         // Función para ajustar anchos de las secciones
         function adjustWidth(section, value) {
@@ -851,17 +1032,57 @@ sys.modules['turtle'] = turtle_module
 print("Módulo turtle personalizado registrado correctamente")
                 `);
                 
-                // Configurar input básico
+                // Configurar input integrado con interfaz personalizada
                 pyodide.runPython(`
 import builtins
+from pyodide.ffi import create_proxy
+import asyncio
+
+# Variable global para almacenar la respuesta del input
+_input_response = None
+_input_waiting = False
 
 def input(prompt=''):
+    global _input_response, _input_waiting
     import js
-    # Usar prompt simple por ahora
-    result = js.window.prompt(str(prompt)) or ""
-    return str(result)
+    
+    # Mostrar el prompt en la salida
+    print(str(prompt), end='', flush=True)
+    
+    # Mostrar la interfaz de input
+    input_section = js.document.getElementById('input-section')
+    input_prompt = js.document.getElementById('input-prompt') 
+    input_field = js.document.getElementById('input-field')
+    
+    input_prompt.textContent = str(prompt)
+    input_field.value = ""
+    input_section.classList.remove('input-hidden')
+    input_field.focus()
+    
+    # Resetear variables
+    _input_response = None
+    _input_waiting = True
+    
+    # Usar prompt como respaldo por limitaciones de Pyodide
+    try:
+        result = js.window.prompt(str(prompt)) or ""
+        # Mostrar la respuesta en la salida para que se vea integrada
+        print(result)
+        return str(result)
+    finally:
+        # Ocultar la interfaz
+        input_section.classList.add('input-hidden')
 
 builtins.input = input
+
+# Función para manejar respuestas de input desde JavaScript
+def handle_input_response(response):
+    global _input_response, _input_waiting
+    _input_response = str(response)
+    _input_waiting = False
+    return _input_response
+
+js.handleInputResponse = create_proxy(handle_input_response)
                 `);
                 
                 // Configurar matplotlib para mostrar gráficos

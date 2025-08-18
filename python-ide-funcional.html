@@ -39,10 +39,38 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: 300px 1fr 1fr;
+            grid-template-columns: var(--examples-width, 300px) var(--editor-width, 1fr) var(--output-width, 1fr);
             gap: 20px;
             padding: 20px;
             min-height: 600px;
+        }
+
+        .width-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .width-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .width-control label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #495057;
+            min-width: 60px;
+        }
+
+        .width-control input[type="range"] {
+            width: 80px;
         }
 
         .examples-panel, .editor-panel {
@@ -201,6 +229,21 @@
             <p>Aprende Python directamente en tu navegador - Sin instalaciones</p>
         </div>
 
+        <div class="width-controls">
+            <div class="width-control">
+                <label>Ejemplos:</label>
+                <input type="range" id="examples-width" min="200" max="500" value="300" onchange="adjustWidth('examples', this.value)">
+            </div>
+            <div class="width-control">
+                <label>Editor:</label>
+                <input type="range" id="editor-width" min="1" max="3" step="0.1" value="1" onchange="adjustWidth('editor', this.value)">
+            </div>
+            <div class="width-control">
+                <label>Salida:</label>
+                <input type="range" id="output-width" min="1" max="3" step="0.1" value="1" onchange="adjustWidth('output', this.value)">
+            </div>
+        </div>
+
         <div class="main-content">
             <div class="examples-panel">
                 <h3>📚 Ejemplos</h3>
@@ -230,14 +273,14 @@
                     <p>Programa interactivo</p>
                 </div>
 
-                <div class="example-item" onclick="cargarEjemplo('turtle_basico')">
-                    <h4>🐢 Turtle Básico</h4>
-                    <p>Gráficos con turtle</p>
+                <div class="example-item" onclick="cargarEjemplo('graficos_basicos')">
+                    <h4>📊 Gráficos Básicos</h4>
+                    <p>Matplotlib y visualización</p>
                 </div>
 
-                <div class="example-item" onclick="cargarEjemplo('turtle_formas')">
-                    <h4>🎨 Turtle Formas</h4>
-                    <p>Dibujos geométricos</p>
+                <div class="example-item" onclick="cargarEjemplo('graficos_formas')">
+                    <h4>🎨 Gráficos Creativos</h4>
+                    <p>Formas y arte con código</p>
                 </div>
             </div>
 
@@ -292,6 +335,18 @@ Ejecuta tu código para ver la salida...</div>
             const response = prompt(promptText || "");
             return response === null ? "" : response;
         };
+
+        // Función para ajustar anchos de las secciones
+        function adjustWidth(section, value) {
+            const mainContent = document.querySelector('.main-content');
+            if (section === 'examples') {
+                mainContent.style.setProperty('--examples-width', value + 'px');
+            } else if (section === 'editor') {
+                mainContent.style.setProperty('--editor-width', value + 'fr');
+            } else if (section === 'output') {
+                mainContent.style.setProperty('--output-width', value + 'fr');
+            }
+        }
         
         const ejemplos = {
             hola: `# Mi primer programa en Python
@@ -430,148 +485,159 @@ except ValueError:
 except Exception as e:
     print(f"Error inesperado: {e}")`,
 
-            turtle_basico: `# Turtle Graphics - Conceptos Básicos
-import turtle
+            graficos_basicos: `# Gráficos con Matplotlib - Conceptos Básicos
+import matplotlib.pyplot as plt
+import numpy as np
 
-print("🐢 Creando gráficos con Turtle...")
+print("📊 Creando gráficos con Matplotlib...")
 
-# Crear una ventana de dibujo
-screen = turtle.Screen()
-screen.title("🐢 Mi primer dibujo con Turtle")
-screen.bgcolor("lightblue")
-screen.setup(600, 500)
+# Configurar el estilo
+plt.style.use('default')
+plt.figure(figsize=(12, 8))
 
-# Crear una tortuga
-t = turtle.Turtle()
-t.shape("turtle")
-t.color("green")
-t.speed(3)
+# Subplot 1: Gráfico de líneas
+plt.subplot(2, 2, 1)
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+plt.plot(x, y, 'b-', linewidth=2, label='sin(x)')
+plt.title('📈 Función Seno')
+plt.xlabel('x')
+plt.ylabel('sin(x)')
+plt.grid(True, alpha=0.3)
+plt.legend()
 
-print("Dibujando un cuadrado...")
-# Dibujar un cuadrado
-for i in range(4):
-    t.forward(100)
-    t.right(90)
+# Subplot 2: Gráfico de barras
+plt.subplot(2, 2, 2)
+categorias = ['Python', 'JavaScript', 'Java', 'C++', 'Go']
+valores = [85, 78, 65, 58, 45]
+colores = ['#3776ab', '#f7df1e', '#ed8b00', '#00599c', '#00add8']
+plt.bar(categorias, valores, color=colores)
+plt.title('💻 Popularidad de Lenguajes')
+plt.ylabel('Puntuación')
+plt.xticks(rotation=45)
 
-print("Moviendo a nueva posición...")
-# Mover sin dibujar
-t.penup()
-t.goto(-150, 0)
-t.pendown()
+# Subplot 3: Gráfico circular
+plt.subplot(2, 2, 3)
+labels = ['Estudiar', 'Dormir', 'Programar', 'Recreo']
+sizes = [8, 8, 6, 2]
+colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+plt.title('⏰ Mi Día (horas)')
 
-print("Dibujando un triángulo...")
-# Cambiar color y dibujar triángulo
-t.color("red")
-for i in range(3):
-    t.forward(80)
-    t.left(120)
+# Subplot 4: Dispersión
+plt.subplot(2, 2, 4)
+x = np.random.randn(50)
+y = 2 * x + np.random.randn(50)
+plt.scatter(x, y, c='red', alpha=0.6, s=50)
+plt.title('🎯 Gráfico de Dispersión')
+plt.xlabel('Variable X')
+plt.ylabel('Variable Y')
+plt.grid(True, alpha=0.3)
 
-print("Dibujando círculos...")
-# Mover y dibujar círculos
-t.penup()
-t.goto(50, -50)
-t.pendown()
-t.color("blue")
-t.circle(40)
+plt.tight_layout()
+plt.show()
 
-t.penup()
-t.goto(-50, -100)
-t.pendown()
-t.color("purple")
-t.circle(30)
+print("✅ ¡Gráficos creados exitosamente!")
+print("Se muestran 4 tipos diferentes de visualización")`,
 
-print("¡Dibujo completado! 🎨")
-print("Presiona en la ventana para cerrar")
+            graficos_formas: `# Gráficos Creativos - Arte con Matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Mantener la ventana abierta
-screen.exitonclick()`,
+print("🎨 Creando arte y formas geométricas...")
 
-            turtle_formas: `# Turtle Graphics - Formas Avanzadas
-import turtle
-import math
+# Figura principal
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+fig.suptitle('🎨 Arte Geométrico con Python', fontsize=16, fontweight='bold')
 
-print("🎨 Creando formas geométricas avanzadas...")
+# Arte 1: Espiral colorida
+ax1 = axes[0, 0]
+theta = np.linspace(0, 8*np.pi, 1000)
+r = theta
+x = r * np.cos(theta)
+y = r * np.sin(theta)
+colors = theta
+scatter = ax1.scatter(x, y, c=colors, cmap='rainbow', s=2)
+ax1.set_title('🌈 Espiral Colorida')
+ax1.set_aspect('equal')
+ax1.axis('off')
 
-# Configurar pantalla
-screen = turtle.Screen()
-screen.title("🎨 Formas Geométricas")
-screen.bgcolor("black")
-screen.setup(800, 600)
+# Arte 2: Mandala matemático
+ax2 = axes[0, 1]
+theta = np.linspace(0, 2*np.pi, 360)
+for i in range(1, 8):
+    r = i
+    x = r * np.cos(i * theta)
+    y = r * np.sin(i * theta)
+    ax2.plot(x, y, linewidth=1, alpha=0.7)
+ax2.set_title('🕸️ Mandala Matemático')
+ax2.set_aspect('equal')
+ax2.axis('off')
 
-# Crear tortuga principal
-artist = turtle.Turtle()
-artist.speed(8)
+# Arte 3: Patrón de círculos
+ax3 = axes[1, 0]
+for i in range(20):
+    for j in range(20):
+        size = np.sin(i/2) * np.cos(j/2) * 100
+        if size > 0:
+            circle = plt.Circle((i, j), size/200, 
+                              color=plt.cm.viridis(size/100), 
+                              alpha=0.7)
+            ax3.add_patch(circle)
+ax3.set_xlim(0, 20)
+ax3.set_ylim(0, 20)
+ax3.set_title('⭕ Patrón de Círculos')
+ax3.set_aspect('equal')
+ax3.axis('off')
 
-def dibujar_estrella(x, y, size, color):
-    """Dibuja una estrella de 5 puntas"""
-    artist.penup()
-    artist.goto(x, y)
-    artist.pendown()
-    artist.color(color)
-    artist.begin_fill()
-    
-    for i in range(5):
-        artist.forward(size)
-        artist.right(144)
-    
-    artist.end_fill()
+# Arte 4: Rosa matemática
+ax4 = axes[1, 1]
+t = np.linspace(0, 24*np.pi, 2000)
+k = 7/3  # Parámetro de la rosa
+r = np.cos(k * t)
+x = r * np.cos(t)
+y = r * np.sin(t)
+ax4.plot(x, y, 'magenta', linewidth=2)
+ax4.set_title('🌹 Rosa Matemática')
+ax4.set_aspect('equal')
+ax4.axis('off')
 
-def dibujar_flor(x, y, radius, petals, color):
-    """Dibuja una flor con pétalos circulares"""
-    artist.penup()
-    artist.goto(x, y)
-    artist.pendown()
-    artist.color(color)
-    
-    for i in range(petals):
-        artist.circle(radius)
-        artist.right(360 / petals)
+plt.tight_layout()
+plt.show()
 
-def dibujar_espiral(x, y, color):
-    """Dibuja una espiral colorida"""
-    artist.penup()
-    artist.goto(x, y)
-    artist.pendown()
-    artist.color(color)
-    
-    for i in range(50):
-        artist.forward(i * 2)
-        artist.right(91)
+# Bonus: Crear un patrón fractal simple
+print("\\n🔮 Creando patrón fractal...")
+plt.figure(figsize=(8, 8))
 
-print("Dibujando estrellas...")
-# Dibujar estrellas
-dibujar_estrella(-200, 150, 60, "yellow")
-dibujar_estrella(200, 150, 40, "orange")
-dibujar_estrella(0, 200, 50, "white")
+# Triángulo de Sierpinski simplificado
+def plot_triangle(p1, p2, p3, depth):
+    if depth == 0:
+        triangle = plt.Polygon([p1, p2, p3], fill=False, edgecolor='blue')
+        plt.gca().add_patch(triangle)
+    else:
+        # Puntos medios
+        m1 = [(p1[0]+p2[0])/2, (p1[1]+p2[1])/2]
+        m2 = [(p2[0]+p3[0])/2, (p2[1]+p3[1])/2]
+        m3 = [(p3[0]+p1[0])/2, (p3[1]+p1[1])/2]
+        
+        # Recursión
+        plot_triangle(p1, m1, m3, depth-1)
+        plot_triangle(m1, p2, m2, depth-1)
+        plot_triangle(m3, m2, p3, depth-1)
 
-print("Dibujando flores...")
-# Dibujar flores
-dibujar_flor(-150, -50, 30, 8, "pink")
-dibujar_flor(150, -50, 25, 6, "red")
+# Triángulo inicial
+p1 = [0, 0]
+p2 = [1, 0]
+p3 = [0.5, np.sqrt(3)/2]
 
-print("Dibujando espiral...")
-# Dibujar espiral
-dibujar_espiral(0, -150, "cyan")
+plot_triangle(p1, p2, p3, 4)
+plt.title('🔺 Patrón Fractal')
+plt.axis('equal')
+plt.axis('off')
+plt.show()
 
-print("Creando patrón hexagonal...")
-# Patrón hexagonal
-artist.penup()
-artist.goto(-50, 50)
-artist.pendown()
-artist.color("lime")
-
-for i in range(6):
-    for j in range(6):
-        artist.forward(20)
-        artist.right(60)
-    artist.right(60)
-
-print("¡Obra de arte completada! 🌟")
-print("Haz clic en la ventana para cerrar")
-
-# Ocultar tortuga y mantener ventana abierta
-artist.hideturtle()
-screen.exitonclick()`
+print("✨ ¡Arte matemático completado!")
+print("Se crearon espirales, mandalas, fractales y rosas matemáticas")`
         };
 
         async function inicializarPyodide() {

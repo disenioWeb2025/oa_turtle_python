@@ -1,0 +1,12 @@
+# Script para crear un archivo ZIP con todos los archivos principales
+
+# Para crear tu propio IDE Python, necesitas estos archivos clave:
+
+## 1. package.json (configuración del proyecto)
+## 2. Los componentes React principales
+## 3. El hook de Pyodide para ejecutar Python
+## 4. Los estilos CSS
+## 5. El servidor Express básico
+
+# Ejecuta este comando para descargar todos los archivos:
+# zip -r python-ide-educativo.zip client/ server/ shared/ package.json tailwind.config.ts vite.config.ts tsconfig.json

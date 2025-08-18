@@ -26,8 +26,8 @@ Tienes un archivo llamado `python-ide-funcional.html` que es tu IDE completo de 
 - **Listas y Bucles**: Estructuras de datos fundamentales
 - **Definir Funciones**: Programación modular
 - **Programa con input()**: Interacción con el usuario (¡FUNCIONA!)
-- **🐢 Turtle Básico**: Gráficos básicos con turtle
-- **🎨 Turtle Formas**: Dibujos geométricos avanzados
+- **📊 Gráficos Básicos**: Matplotlib y visualización de datos
+- **🎨 Gráficos Creativos**: Arte matemático y formas geométricas
 
 ### Editor de Código (centro)
 - Editor profesional con resaltado de sintaxis
@@ -70,7 +70,9 @@ Tienes un archivo llamado `python-ide-funcional.html` que es tu IDE completo de 
 
 ### Lo que SÍ funciona (diferente a otros IDEs):
 - **input() real**: Los estudiantes pueden crear programas interactivos
-- **Turtle Graphics completo**: Dibujos, formas, animaciones y gráficos
+- **Matplotlib completo**: Gráficos, visualización de datos y arte matemático
+- **Numpy integrado**: Cálculos científicos y matemáticas avanzadas
+- **Controles de interfaz**: Ajustar anchos de secciones a tu preferencia
 - **Python completo**: Todas las funciones básicas de Python
 - **Sin servidores**: Funciona completamente en el navegador
 - **Sin limitaciones**: No hay restricciones de tiempo o uso
@@ -84,19 +86,17 @@ print(f"Hola {nombre}, tienes {edad} años!")
 ```
 
 ```python
-# Turtle Graphics que SÍ funciona:
-import turtle
-screen = turtle.Screen()
-t = turtle.Turtle()
-t.shape("turtle")
-t.color("green")
+# Gráficos con Matplotlib que SÍ funciona:
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Dibujar un cuadrado
-for i in range(4):
-    t.forward(100)
-    t.right(90)
-
-screen.exitonclick()
+# Crear gráfico simple
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+plt.plot(x, y, 'b-', linewidth=2)
+plt.title('Función Seno')
+plt.grid(True)
+plt.show()
 ```
 
 ## 🌐 Cómo compartir con estudiantes:
@@ -126,11 +126,11 @@ screen.exitonclick()
 - Usa `input()` normalmente
 - Aparece una ventana para escribir
 
-**"No funciona turtle"**
-- ✅ SÍ funciona completamente
-- Se abre una ventana gráfica automáticamente
-- Incluye formas, colores, animaciones
-- Usa `screen.exitonclick()` para cerrar la ventana
+**"No funcionan los gráficos"**
+- ✅ SÍ funciona Matplotlib completamente
+- Se muestran gráficos automáticamente
+- Incluye barras, líneas, dispersión, arte matemático
+- Numpy también disponible para cálculos
 
 **"Error 404 en GitHub Pages"**
 - Revisa que el archivo esté subido correctamente
@@ -153,8 +153,17 @@ screen.exitonclick()
 ### Para profesores:
 - Demuestra los ejemplos en clase primero
 - Pide a los estudiantes que modifiquen los ejemplos
+- Ajusta los anchos de secciones según tu pantalla
+- Usa gráficos para enseñar matemáticas visualmente
 - El IDE es perfecto para tareas cortas y ejercicios
 - Funciona excelente para enseñar conceptos básicos
+
+### Controles de interfaz:
+- **Deslizadores de ancho**: En la parte superior puedes ajustar el tamaño de cada sección
+- **Panel de ejemplos**: De 200px a 500px de ancho
+- **Editor de código**: De 1x a 3x de proporción relativa
+- **Panel de salida**: De 1x a 3x de proporción relativa
+- Los cambios se aplican inmediatamente mientras trabajas
 
 ## ✨ Lo mejor de este IDE:
 - **No hay excusas**: Funciona en cualquier computadora

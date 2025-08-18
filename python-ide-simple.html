@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐍 IDE Python Educativo</title>
+    <title>🐍 IDE Python Educativo - Interactivo</title>
     <style>
         * {
             margin: 0;
@@ -212,6 +212,16 @@
             color: #f44336;
         }
 
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #856404;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -237,36 +247,44 @@
                 
                 <div class="example-item" onclick="cargarEjemplo('hola')">
                     <h4>Hola Mundo</h4>
-                    <p>Tu primer programa en Python</p>
+                    <p>Variables y operaciones básicas</p>
                 </div>
 
                 <div class="example-item" onclick="cargarEjemplo('calculadora')">
                     <h4>Calculadora</h4>
-                    <p>Operaciones matemáticas básicas</p>
+                    <p>Operaciones matemáticas</p>
                 </div>
 
                 <div class="example-item" onclick="cargarEjemplo('listas')">
                     <h4>Listas y Bucles</h4>
-                    <p>Trabajo con estructuras de datos</p>
+                    <p>Estructuras de datos</p>
                 </div>
 
                 <div class="example-item" onclick="cargarEjemplo('funciones')">
                     <h4>Funciones</h4>
-                    <p>Definir y usar funciones</p>
+                    <p>Programación modular</p>
                 </div>
 
-                <div class="example-item" onclick="cargarEjemplo('juego')">
-                    <h4>Juego Simple</h4>
-                    <p>Adivina el número</p>
+                <div class="example-item" onclick="cargarEjemplo('interactivo')">
+                    <h4>Programa Interactivo</h4>
+                    <p>Con input() del usuario</p>
                 </div>
             </div>
 
             <div class="editor-panel">
+                <div class="note">
+                    💡 <strong>Tip:</strong> Los ejemplos "interactivos" usan input() y aparecerán ventanas emergentes para que ingreses datos.
+                </div>
                 <h3>✏️ Editor de Código</h3>
                 <textarea id="code-editor" class="code-editor" placeholder="Escribe tu código Python aquí..."># Mi primer programa en Python
 print("¡Hola, mundo!")
-nombre = input("¿Cómo te llamas? ")
-print(f"¡Hola, {nombre}! Bienvenido a Python")</textarea>
+print("Este es tu primer programa en Python")
+
+# Variables y operaciones básicas
+nombre = "Estudiante"
+edad = 15
+print(f"Hola {nombre}, tienes {edad} años")
+print(f"El próximo año tendrás {edad + 1} años")</textarea>
             </div>
 
             <div class="output-panel">
@@ -299,141 +317,161 @@ Ejecuta tu código para ver la salida aquí...</div>
         const ejemplos = {
             hola: `# Mi primer programa en Python
 print("¡Hola, mundo!")
-nombre = input("¿Cómo te llamas? ")
-print(f"¡Hola, {nombre}! Bienvenido a Python")
+print("Este es tu primer programa en Python")
 
-# También puedes hacer operaciones
-edad = int(input("¿Cuántos años tienes? "))
-print(f"El próximo año tendrás {edad + 1} años")`,
+# Variables y operaciones básicas
+nombre = "Estudiante"
+edad = 15
+print(f"Hola {nombre}, tienes {edad} años")
+print(f"El próximo año tendrás {edad + 1} años")
 
-            calculadora: `# Calculadora básica
+# Operaciones matemáticas
+a = 10
+b = 5
+print(f"{a} + {b} = {a + b}")
+print(f"{a} * {b} = {a * b}")`,
+
+            calculadora: `# Calculadora básica con ejemplos
 print("=== Calculadora Simple ===")
 
-def calculadora():
-    try:
-        num1 = float(input("Primer número: "))
-        operacion = input("Operación (+, -, *, /): ")
-        num2 = float(input("Segundo número: "))
-        
-        if operacion == "+":
-            resultado = num1 + num2
-        elif operacion == "-":
-            resultado = num1 - num2
-        elif operacion == "*":
-            resultado = num1 * num2
-        elif operacion == "/":
-            if num2 != 0:
-                resultado = num1 / num2
-            else:
-                print("Error: No se puede dividir por cero")
-                return
-        else:
-            print("Operación no válida")
-            return
-        
-        print(f"Resultado: {num1} {operacion} {num2} = {resultado}")
-    except ValueError:
-        print("Error: Ingresa números válidos")
+# Ejemplo 1: Suma
+num1 = 15
+num2 = 7
+suma = num1 + num2
+print(f"Suma: {num1} + {num2} = {suma}")
 
-calculadora()`,
+# Ejemplo 2: Resta
+resta = num1 - num2
+print(f"Resta: {num1} - {num2} = {resta}")
+
+# Ejemplo 3: Multiplicación
+multiplicacion = num1 * num2
+print(f"Multiplicación: {num1} * {num2} = {multiplicacion}")
+
+# Ejemplo 4: División
+if num2 != 0:
+    division = num1 / num2
+    print(f"División: {num1} / {num2} = {division:.2f}")
+
+# Ejemplo 5: Potencia y raíz
+import math
+potencia = num1 ** 2
+raiz = math.sqrt(num1)
+print(f"Potencia: {num1}² = {potencia}")
+print(f"Raíz cuadrada de {num1} = {raiz:.2f}")`,
 
             listas: `# Trabajando con listas y bucles
-print("=== Gestión de Lista de Estudiantes ===")
+print("=== Gestión de Lista de Frutas ===")
 
-estudiantes = ["Ana", "Carlos", "María", "José"]
-calificaciones = [85, 92, 78, 96]
+# Lista inicial
+frutas = ["manzana", "banana", "naranja", "uva"]
+print("Frutas disponibles:")
 
-print("Lista inicial de estudiantes:")
-for i, estudiante in enumerate(estudiantes):
-    print(f"{i+1}. {estudiante} - Calificación: {calificaciones[i]}")
+# Mostrar lista numerada
+for i, fruta in enumerate(frutas, 1):
+    print(f"{i}. {fruta}")
 
-# Agregar nuevo estudiante
-nuevo = input("\\nNombre del nuevo estudiante: ")
-nota = float(input("Calificación: "))
-estudiantes.append(nuevo)
-calificaciones.append(nota)
+# Agregar más frutas
+frutas.append("fresa")
+frutas.append("mango")
 
 print("\\nLista actualizada:")
-for i, estudiante in enumerate(estudiantes):
-    print(f"{i+1}. {estudiante} - Calificación: {calificaciones[i]}")
+for fruta in frutas:
+    print(f"- {fruta}")
 
-# Calcular promedio
-promedio = sum(calificaciones) / len(calificaciones)
-print(f"\\nPromedio de la clase: {promedio:.2f}")`,
+# Operaciones con listas
+print(f"\\nTotal de frutas: {len(frutas)}")
+print(f"Primera fruta: {frutas[0]}")
+print(f"Última fruta: {frutas[-1]}")
+
+# Lista de números
+numeros = [1, 2, 3, 4, 5]
+cuadrados = [x**2 for x in numeros]
+print(f"\\nNúmeros: {numeros}")
+print(f"Cuadrados: {cuadrados}")`,
 
             funciones: `# Trabajando con funciones
-def saludar(nombre, apellido=""):
+def saludar(nombre):
     """Función que saluda a una persona"""
-    if apellido:
-        return f"¡Hola, {nombre} {apellido}!"
-    else:
-        return f"¡Hola, {nombre}!"
+    return f"¡Hola, {nombre}!"
 
 def calcular_promedio(numeros):
-    """Calcula el promedio de una lista de números"""
+    """Calcula el promedio de una lista"""
     if not numeros:
         return 0
     return sum(numeros) / len(numeros)
 
-def es_numero_primo(numero):
-    """Verifica si un número es primo"""
-    if numero < 2:
-        return False
-    for i in range(2, int(numero ** 0.5) + 1):
-        if numero % i == 0:
-            return False
-    return True
+def tabla_multiplicar(numero, limite=5):
+    """Genera tabla de multiplicar"""
+    print(f"\\nTabla del {numero}:")
+    for i in range(1, limite + 1):
+        resultado = numero * i
+        print(f"{numero} × {i} = {resultado}")
+
+def es_par(numero):
+    """Verifica si un número es par"""
+    return numero % 2 == 0
 
 # Usando las funciones
 print(saludar("María"))
-print(saludar("Juan", "Pérez"))
+print(saludar("Carlos"))
 
+# Calculando promedios
 notas = [85, 92, 78, 96, 88]
-print(f"\\nPromedio de notas: {calcular_promedio(notas):.2f}")
+promedio = calcular_promedio(notas)
+print(f"\\nNotas: {notas}")
+print(f"Promedio: {promedio:.1f}")
 
-numero = int(input("\\nIngresa un número: "))
-if es_numero_primo(numero):
-    print(f"{numero} es un número primo")
-else:
-    print(f"{numero} no es un número primo")`,
+# Verificando números pares
+for num in [2, 3, 4, 5, 6]:
+    if es_par(num):
+        print(f"{num} es par")
+    else:
+        print(f"{num} es impar")
 
-            juego: `# Juego: Adivina el número
-import random
+# Tabla de multiplicar
+tabla_multiplicar(7, 3)`,
 
-def juego_adivinanza():
-    print("=== JUEGO: ADIVINA EL NÚMERO ===")
-    print("He pensado un número entre 1 y 100")
-    print("¡Tienes 7 intentos para adivinarlo!")
-    
-    numero_secreto = random.randint(1, 100)
-    intentos = 7
-    
-    while intentos > 0:
-        try:
-            adivinanza = int(input(f"\\nIntentos restantes: {intentos}\\nTu número: "))
-            
-            if adivinanza == numero_secreto:
-                print(f"🎉 ¡FELICIDADES! Adivinaste el número {numero_secreto}")
-                print(f"Lo lograste en {7 - intentos + 1} intentos")
-                break
-            elif adivinanza < numero_secreto:
-                print("📈 El número es MÁS ALTO")
-            else:
-                print("📉 El número es MÁS BAJO")
-                
-            intentos -= 1
-            
-        except ValueError:
-            print("❌ Por favor, ingresa un número válido")
-    
-    if intentos == 0:
-        print(f"😞 Se acabaron los intentos. El número era {numero_secreto}")
-    
-    jugar_otra = input("\\n¿Quieres jugar otra vez? (s/n): ")
-    if jugar_otra.lower() == 's':
-        juego_adivinanza()
+            interactivo: `# Programa interactivo con input()
+print("=== Programa Interactivo ===")
 
-juego_adivinanza()`
+# Este ejemplo SÍ usa input() - aparecerán ventanas emergentes
+nombre = input("¿Cuál es tu nombre? ")
+print(f"¡Hola {nombre}! Encantado de conocerte")
+
+try:
+    edad = int(input("¿Cuántos años tienes? "))
+    print(f"Tienes {edad} años")
+    
+    if edad < 18:
+        print("Eres menor de edad")
+    elif edad >= 65:
+        print("Eres adulto mayor")
+    else:
+        print("Eres adulto")
+        
+    print(f"En 10 años tendrás {edad + 10} años")
+    
+except ValueError:
+    print("Por favor, ingresa un número válido para la edad")
+
+# Calculadora interactiva
+try:
+    num1 = float(input("Ingresa el primer número: "))
+    num2 = float(input("Ingresa el segundo número: "))
+    
+    print(f"\\n=== Resultados ===")
+    print(f"{num1} + {num2} = {num1 + num2}")
+    print(f"{num1} - {num2} = {num1 - num2}")
+    print(f"{num1} × {num2} = {num1 * num2}")
+    
+    if num2 != 0:
+        print(f"{num1} ÷ {num2} = {num1 / num2:.2f}")
+    else:
+        print("No se puede dividir por cero")
+        
+except ValueError:
+    print("Error: Debes ingresar números válidos")`
         };
 
         async function inicializarPyodide() {
@@ -448,22 +486,30 @@ juego_adivinanza()`
                     indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
                 });
                 
-                // Simular input() para que funcione en el navegador
+                // Configurar input() para trabajar con ventanas emergentes del navegador
                 pyodide.runPython(`
 import builtins
-import sys
 
-def browser_input(prompt=""):
-    print(prompt, end="")
-    response = input()
-    return response
+def browser_input(prompt_text=""):
+    # Importar la función prompt de JavaScript
+    from js import prompt as js_prompt
+    
+    # Mostrar ventana emergente y obtener respuesta
+    response = js_prompt(str(prompt_text))
+    
+    # Si el usuario cancela, devolver cadena vacía
+    if response is None:
+        response = ""
+    
+    # Convertir a string y devolver
+    return str(response)
 
-# Reemplazar input con nuestra versión
+# Reemplazar input() con nuestra versión
 builtins.input = browser_input
                 `);
                 
                 isLoading = false;
-                statusElement.textContent = '✅ Python listo para usar';
+                statusElement.textContent = '✅ Python listo - input() funcionando';
                 statusElement.className = 'status ready';
                 runButton.disabled = false;
                 
@@ -494,7 +540,7 @@ builtins.input = browser_input
             output.textContent = 'Ejecutando código...\\n';
 
             try {
-                // Capturar stdout
+                // Capturar stdout y stderr
                 pyodide.runPython(`
 import sys
 from io import StringIO
@@ -509,7 +555,7 @@ sys.stderr = StringIO()
                 const stdout = pyodide.runPython("sys.stdout.getvalue()");
                 const stderr = pyodide.runPython("sys.stderr.getvalue()");
 
-                // Restaurar stdout original
+                // Restaurar stdout/stderr originales
                 pyodide.runPython(`
 sys.stdout = sys.__stdout__
 sys.stderr = sys.__stderr__

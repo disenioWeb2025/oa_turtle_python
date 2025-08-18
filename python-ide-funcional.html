@@ -229,6 +229,16 @@
                     <h4>Con input()</h4>
                     <p>Programa interactivo</p>
                 </div>
+
+                <div class="example-item" onclick="cargarEjemplo('turtle_basico')">
+                    <h4>🐢 Turtle Básico</h4>
+                    <p>Gráficos con turtle</p>
+                </div>
+
+                <div class="example-item" onclick="cargarEjemplo('turtle_formas')">
+                    <h4>🎨 Turtle Formas</h4>
+                    <p>Dibujos geométricos</p>
+                </div>
             </div>
 
             <div class="editor-panel">
@@ -418,7 +428,150 @@ try:
 except ValueError:
     print("Error: Debes ingresar números válidos")
 except Exception as e:
-    print(f"Error inesperado: {e}")`
+    print(f"Error inesperado: {e}")`,
+
+            turtle_basico: `# Turtle Graphics - Conceptos Básicos
+import turtle
+
+print("🐢 Creando gráficos con Turtle...")
+
+# Crear una ventana de dibujo
+screen = turtle.Screen()
+screen.title("🐢 Mi primer dibujo con Turtle")
+screen.bgcolor("lightblue")
+screen.setup(600, 500)
+
+# Crear una tortuga
+t = turtle.Turtle()
+t.shape("turtle")
+t.color("green")
+t.speed(3)
+
+print("Dibujando un cuadrado...")
+# Dibujar un cuadrado
+for i in range(4):
+    t.forward(100)
+    t.right(90)
+
+print("Moviendo a nueva posición...")
+# Mover sin dibujar
+t.penup()
+t.goto(-150, 0)
+t.pendown()
+
+print("Dibujando un triángulo...")
+# Cambiar color y dibujar triángulo
+t.color("red")
+for i in range(3):
+    t.forward(80)
+    t.left(120)
+
+print("Dibujando círculos...")
+# Mover y dibujar círculos
+t.penup()
+t.goto(50, -50)
+t.pendown()
+t.color("blue")
+t.circle(40)
+
+t.penup()
+t.goto(-50, -100)
+t.pendown()
+t.color("purple")
+t.circle(30)
+
+print("¡Dibujo completado! 🎨")
+print("Presiona en la ventana para cerrar")
+
+# Mantener la ventana abierta
+screen.exitonclick()`,
+
+            turtle_formas: `# Turtle Graphics - Formas Avanzadas
+import turtle
+import math
+
+print("🎨 Creando formas geométricas avanzadas...")
+
+# Configurar pantalla
+screen = turtle.Screen()
+screen.title("🎨 Formas Geométricas")
+screen.bgcolor("black")
+screen.setup(800, 600)
+
+# Crear tortuga principal
+artist = turtle.Turtle()
+artist.speed(8)
+
+def dibujar_estrella(x, y, size, color):
+    """Dibuja una estrella de 5 puntas"""
+    artist.penup()
+    artist.goto(x, y)
+    artist.pendown()
+    artist.color(color)
+    artist.begin_fill()
+    
+    for i in range(5):
+        artist.forward(size)
+        artist.right(144)
+    
+    artist.end_fill()
+
+def dibujar_flor(x, y, radius, petals, color):
+    """Dibuja una flor con pétalos circulares"""
+    artist.penup()
+    artist.goto(x, y)
+    artist.pendown()
+    artist.color(color)
+    
+    for i in range(petals):
+        artist.circle(radius)
+        artist.right(360 / petals)
+
+def dibujar_espiral(x, y, color):
+    """Dibuja una espiral colorida"""
+    artist.penup()
+    artist.goto(x, y)
+    artist.pendown()
+    artist.color(color)
+    
+    for i in range(50):
+        artist.forward(i * 2)
+        artist.right(91)
+
+print("Dibujando estrellas...")
+# Dibujar estrellas
+dibujar_estrella(-200, 150, 60, "yellow")
+dibujar_estrella(200, 150, 40, "orange")
+dibujar_estrella(0, 200, 50, "white")
+
+print("Dibujando flores...")
+# Dibujar flores
+dibujar_flor(-150, -50, 30, 8, "pink")
+dibujar_flor(150, -50, 25, 6, "red")
+
+print("Dibujando espiral...")
+# Dibujar espiral
+dibujar_espiral(0, -150, "cyan")
+
+print("Creando patrón hexagonal...")
+# Patrón hexagonal
+artist.penup()
+artist.goto(-50, 50)
+artist.pendown()
+artist.color("lime")
+
+for i in range(6):
+    for j in range(6):
+        artist.forward(20)
+        artist.right(60)
+    artist.right(60)
+
+print("¡Obra de arte completada! 🌟")
+print("Haz clic en la ventana para cerrar")
+
+# Ocultar tortuga y mantener ventana abierta
+artist.hideturtle()
+screen.exitonclick()`
         };
 
         async function inicializarPyodide() {

@@ -851,40 +851,15 @@ sys.modules['turtle'] = turtle_module
 print("Módulo turtle personalizado registrado correctamente")
                 `);
                 
-                // Configurar input para que funcione con la interfaz personalizada
+                // Configurar input básico
                 pyodide.runPython(`
 import builtins
-from js import pythonInput
-import asyncio
-from pyodide import create_proxy
 
-# Crear una función que maneje correctamente las promesas JavaScript
 def input(prompt=''):
     import js
-    from pyodide.ffi import to_js
-    
-    # Mostrar el prompt en el output primero
-    print(prompt, end='', flush=True)
-    
-    # Usar la interfaz personalizada
-    input_section = js.document.getElementById('input-section')
-    input_prompt_elem = js.document.getElementById('input-prompt')
-    input_field = js.document.getElementById('input-field')
-    
-    input_prompt_elem.textContent = str(prompt)
-    input_field.value = ""
-    input_section.classList.remove('input-hidden')
-    input_field.focus()
-    
-    # Esperar a que el usuario ingrese el valor
-    # Por ahora usar prompt como fallback hasta que podamos hacer async correctamente
-    try:
-        result = js.window.prompt(str(prompt)) or ""
-        input_section.classList.add('input-hidden')
-        print(result)  # Mostrar el resultado en el output
-        return str(result)
-    except:
-        return ""
+    # Usar prompt simple por ahora
+    result = js.window.prompt(str(prompt)) or ""
+    return str(result)
 
 builtins.input = input
                 `);
@@ -1046,4 +1021,3 @@ sys.stderr = sys.__stderr__
     </script>
 </body>
 </html>
-

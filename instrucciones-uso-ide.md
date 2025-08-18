@@ -26,6 +26,8 @@ Tienes un archivo llamado `python-ide-funcional.html` que es tu IDE completo de 
 - **Listas y Bucles**: Estructuras de datos fundamentales
 - **Definir Funciones**: Programación modular
 - **Programa con input()**: Interacción con el usuario (¡FUNCIONA!)
+- **🐢 Turtle Básico**: Gráficos básicos con turtle
+- **🎨 Turtle Formas**: Dibujos geométricos avanzados
 
 ### Editor de Código (centro)
 - Editor profesional con resaltado de sintaxis
@@ -68,6 +70,7 @@ Tienes un archivo llamado `python-ide-funcional.html` que es tu IDE completo de 
 
 ### Lo que SÍ funciona (diferente a otros IDEs):
 - **input() real**: Los estudiantes pueden crear programas interactivos
+- **Turtle Graphics completo**: Dibujos, formas, animaciones y gráficos
 - **Python completo**: Todas las funciones básicas de Python
 - **Sin servidores**: Funciona completamente en el navegador
 - **Sin limitaciones**: No hay restricciones de tiempo o uso
@@ -78,6 +81,22 @@ Tienes un archivo llamado `python-ide-funcional.html` que es tu IDE completo de 
 nombre = input("¿Cómo te llamas? ")
 edad = int(input("¿Cuántos años tienes? "))
 print(f"Hola {nombre}, tienes {edad} años!")
+```
+
+```python
+# Turtle Graphics que SÍ funciona:
+import turtle
+screen = turtle.Screen()
+t = turtle.Turtle()
+t.shape("turtle")
+t.color("green")
+
+# Dibujar un cuadrado
+for i in range(4):
+    t.forward(100)
+    t.right(90)
+
+screen.exitonclick()
 ```
 
 ## 🌐 Cómo compartir con estudiantes:
@@ -106,6 +125,12 @@ print(f"Hola {nombre}, tienes {edad} años!")
 - ✅ SÍ funciona en este IDE
 - Usa `input()` normalmente
 - Aparece una ventana para escribir
+
+**"No funciona turtle"**
+- ✅ SÍ funciona completamente
+- Se abre una ventana gráfica automáticamente
+- Incluye formas, colores, animaciones
+- Usa `screen.exitonclick()` para cerrar la ventana
 
 **"Error 404 en GitHub Pages"**
 - Revisa que el archivo esté subido correctamente

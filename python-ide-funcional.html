@@ -31,15 +31,10 @@
             background: linear-gradient(135deg, #2196F3, #21CBF3);
             color: white;
             padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            text-align: center;
         }
 
         .header-content {
-            flex: 1;
             text-align: center;
         }
 
@@ -53,13 +48,6 @@
             opacity: 0.9; 
         }
 
-        .header-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
         .main-content {
             display: grid;
             grid-template-columns: var(--examples-width, 300px) var(--editor-width, 1fr) var(--output-width, 1fr);
@@ -70,12 +58,24 @@
 
         .width-controls {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             gap: 15px;
             padding: 10px;
             background: #f8f9fa;
             border-radius: 8px;
             margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .width-sliders {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
             align-items: center;
         }
 
@@ -214,7 +214,6 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
             border: none;
             padding: 12px 20px;
@@ -222,13 +221,11 @@
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
             white-space: nowrap;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
 
         .btn:disabled {
@@ -238,9 +235,31 @@
             box-shadow: none;
         }
 
-        .btn-secondary {
-            background: linear-gradient(135deg, #ff9800, #f57c00);
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        .btn-ejecutar {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-ejecutar:hover {
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn-limpiar {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-limpiar:hover {
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-descargar {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-descargar:hover {
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
         }
 
         .status {
@@ -314,33 +333,35 @@
                 <h1>🐍 IDE Python Educativo</h1>
                 <p>Aprende Python directamente en tu navegador - Sin instalaciones</p>
             </div>
-            
-            <div class="header-controls">
-                <button id="run-btn" class="btn" onclick="ejecutarCodigo()">
-                    ▶️ Ejecutar
-                </button>
-                <button class="btn btn-secondary" onclick="limpiarEditor()">
-                    🗑️ Limpiar
-                </button>
-                <button class="btn btn-secondary" onclick="descargarCodigo()">
-                    💾 Descargar
-                </button>
-                <div id="status" class="status">Cargando Python...</div>
-            </div>
         </div>
 
         <div class="width-controls">
-            <div class="width-control">
-                <label>Ejemplos:</label>
-                <input type="range" id="examples-width" min="200" max="500" value="300" onchange="adjustWidth('examples', this.value)">
+            <div class="width-sliders">
+                <div class="width-control">
+                    <label>Ejemplos:</label>
+                    <input type="range" id="examples-width" min="200" max="500" value="300" onchange="adjustWidth('examples', this.value)">
+                </div>
+                <div class="width-control">
+                    <label>Editor:</label>
+                    <input type="range" id="editor-width" min="1" max="3" step="0.1" value="1" onchange="adjustWidth('editor', this.value)">
+                </div>
+                <div class="width-control">
+                    <label>Salida:</label>
+                    <input type="range" id="output-width" min="1" max="3" step="0.1" value="1" onchange="adjustWidth('output', this.value)">
+                </div>
             </div>
-            <div class="width-control">
-                <label>Editor:</label>
-                <input type="range" id="editor-width" min="1" max="3" step="0.1" value="1" onchange="adjustWidth('editor', this.value)">
-            </div>
-            <div class="width-control">
-                <label>Salida:</label>
-                <input type="range" id="output-width" min="1" max="3" step="0.1" value="1" onchange="adjustWidth('output', this.value)">
+            
+            <div class="control-buttons">
+                <button id="run-btn" class="btn btn-ejecutar" onclick="ejecutarCodigo()">
+                    ▶️ Ejecutar
+                </button>
+                <button class="btn btn-limpiar" onclick="limpiarEditor()">
+                    🗑️ Limpiar
+                </button>
+                <button class="btn btn-descargar" onclick="descargarCodigo()">
+                    💾 Descargar
+                </button>
+                <div id="status" class="status">Cargando Python...</div>
             </div>
         </div>
 
@@ -488,10 +509,10 @@ class Turtle:
         if self.pen_down:
             self.ctx.beginPath()
             self.ctx.moveTo(self.x, self.y)
-            self.ctx.lineTo(x, y)
+            self.ctx.lineTo(x + 200, y + 150)  # Ajustar coordenadas al canvas
             self.ctx.stroke()
-        self.x = x
-        self.y = y
+        self.x = x + 200  # Ajustar al centro del canvas
+        self.y = y + 150
     
     def circle(self, radius):
         self.ctx.beginPath()
@@ -556,10 +577,7 @@ pd = pendown
             return turtleModule;
         }
 
-        // Función JavaScript para manejar input()
-        let inputResolver = null;
-        let isWaitingForInput = false;
-        
+        // Función JavaScript para manejar input() - aparece abajo de la salida
         window.pythonInput = function(promptText) {
             return new Promise((resolve) => {
                 const inputSection = document.getElementById('input-section');
@@ -571,20 +589,20 @@ pd = pendown
                 inputSection.classList.remove('input-hidden');
                 inputField.focus();
                 
-                isWaitingForInput = true;
-                inputResolver = resolve;
+                const handleSubmit = () => {
+                    const value = inputField.value;
+                    inputSection.classList.add('input-hidden');
+                    inputField.removeEventListener('keypress', handleKeyPress);
+                    resolve(value);
+                };
                 
-                const handleEnter = (e) => {
+                const handleKeyPress = (e) => {
                     if (e.key === 'Enter') {
-                        const value = inputField.value;
-                        inputSection.classList.add('input-hidden');
-                        isWaitingForInput = false;
-                        inputField.removeEventListener('keypress', handleEnter);
-                        resolve(value);
+                        handleSubmit();
                     }
                 };
                 
-                inputField.addEventListener('keypress', handleEnter);
+                inputField.addEventListener('keypress', handleKeyPress);
             });
         };
 
@@ -802,20 +820,74 @@ print("- clear()") `
                 
                 pyodide = await loadPyodide();
                 
-                // Configurar input
-                pyodide.globals.set("input", (prompt) => {
-                    return window.pythonInput(prompt);
-                });
-                
-                // Configurar turtle module
-                await pyodide.runPython(setupTurtleModule());
-                
                 // Instalar paquetes necesarios
+                statusElement.textContent = 'Instalando librerías...';
                 await pyodide.loadPackage(['matplotlib', 'numpy']);
                 
-                statusElement.textContent = '✅ Python listo';
-                statusElement.className = 'status ready';
-                isLoading = false;
+                statusElement.textContent = 'Configurando módulos...';
+                
+                // Configurar turtle module personalizado PRIMERO
+                pyodide.runPython(`
+import sys
+import types
+
+# Crear el módulo turtle personalizado
+${setupTurtleModule()}
+
+# Crear un módulo turtle que se puede importar
+turtle_module = types.ModuleType('turtle')
+
+# Agregar todas las funciones turtle al módulo
+for name in dir():
+    if not name.startswith('_') and name in [
+        'Turtle', 'forward', 'backward', 'right', 'left', 'penup', 'pendown', 
+        'goto', 'circle', 'color', 'clear', 'reset', 'fd', 'bk', 'rt', 'lt', 'pu', 'pd'
+    ]:
+        setattr(turtle_module, name, globals()[name])
+
+# Registrar el módulo en sys.modules para que import turtle funcione
+sys.modules['turtle'] = turtle_module
+
+print("Módulo turtle personalizado registrado correctamente")
+                `);
+                
+                // Configurar input para que funcione con la interfaz personalizada
+                pyodide.runPython(`
+import builtins
+from js import pythonInput
+import asyncio
+from pyodide import create_proxy
+
+# Crear una función que maneje correctamente las promesas JavaScript
+def input(prompt=''):
+    import js
+    from pyodide.ffi import to_js
+    
+    # Mostrar el prompt en el output primero
+    print(prompt, end='', flush=True)
+    
+    # Usar la interfaz personalizada
+    input_section = js.document.getElementById('input-section')
+    input_prompt_elem = js.document.getElementById('input-prompt')
+    input_field = js.document.getElementById('input-field')
+    
+    input_prompt_elem.textContent = str(prompt)
+    input_field.value = ""
+    input_section.classList.remove('input-hidden')
+    input_field.focus()
+    
+    # Esperar a que el usuario ingrese el valor
+    # Por ahora usar prompt como fallback hasta que podamos hacer async correctamente
+    try:
+        result = js.window.prompt(str(prompt)) or ""
+        input_section.classList.add('input-hidden')
+        print(result)  # Mostrar el resultado en el output
+        return str(result)
+    except:
+        return ""
+
+builtins.input = input
+                `);
                 
                 // Configurar matplotlib para mostrar gráficos
                 pyodide.runPython(`
@@ -841,6 +913,11 @@ def show_plot():
 plt.show = show_plot
                 `);
                 
+                statusElement.textContent = '✅ Python listo';
+                statusElement.className = 'status ready';
+                isLoading = false;
+                outputElement.textContent = 'Python 3.10 | Pyodide\n🐢 Turtle graphics disponible\nEjecuta tu código para ver la salida...';
+                
             } catch (error) {
                 outputElement.textContent = `Error al cargar Python: ${error.message}`;
                 statusElement.textContent = '❌ Error al cargar';
@@ -862,42 +939,64 @@ plt.show = show_plot
             runBtn.textContent = '⏳ Ejecutando...';
             
             // Limpiar output anterior
-            outputElement.innerHTML = 'Ejecutando código...\n\n';
+            outputElement.textContent = 'Ejecutando código...\n\n';
             
-            // Ocultar input section
+            // Ocultar input section si estaba visible
             document.getElementById('input-section').classList.add('input-hidden');
 
             try {
-                // Configurar el entorno
+                // Configurar input personalizado para esta ejecución
                 pyodide.runPython(`
 import sys
 from io import StringIO
 import builtins
 
-# Crear nuestro módulo turtle personalizado
-${setupTurtleModule()}
+# Variable global para manejar input
+_input_promise = None
 
-# Función input personalizada
 def input(prompt=''):
-    from js import pythonInput
-    result = pythonInput(str(prompt))
-    print(f"{prompt}{result}")
-    return result
+    import js
+    
+    # Mostrar el prompt en stdout primero
+    sys.stdout.write(str(prompt))
+    sys.stdout.flush()
+    
+    # Mostrar la interfaz de input
+    input_section = js.document.getElementById('input-section')
+    input_prompt_elem = js.document.getElementById('input-prompt') 
+    input_field = js.document.getElementById('input-field')
+    
+    input_prompt_elem.textContent = str(prompt)
+    input_field.value = ""
+    input_section.classList.remove('input-hidden')
+    input_field.focus()
+    
+    # Usar prompt como fallback por ahora - mejor que no funcione
+    result = js.window.prompt(str(prompt)) or ""
+    input_section.classList.add('input-hidden')
+    
+    # Mostrar el resultado en stdout
+    sys.stdout.write(str(result) + '\\n')
+    sys.stdout.flush()
+    
+    return str(result)
 
 # Reemplazar input built-in
 builtins.input = input
 
 # Capturar stdout/stderr
-sys.stdout = StringIO()
-sys.stderr = StringIO()
+stdout_buffer = StringIO()
+stderr_buffer = StringIO()
+sys.stdout = stdout_buffer
+sys.stderr = stderr_buffer
                 `);
                 
                 // Ejecutar código del usuario
-                await pyodide.runPython(codigo);
+                pyodide.runPython(codigo);
                 
                 // Obtener output
-                const stdout = pyodide.runPython("sys.stdout.getvalue()");
-                const stderr = pyodide.runPython("sys.stderr.getvalue()");
+                const stdout = pyodide.runPython("stdout_buffer.getvalue()");
+                const stderr = pyodide.runPython("stderr_buffer.getvalue()");
                 
                 // Restaurar stdout/stderr
                 pyodide.runPython(`
@@ -947,3 +1046,4 @@ sys.stderr = sys.__stderr__
     </script>
 </body>
 </html>
+

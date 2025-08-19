@@ -581,7 +581,7 @@ Ejecuta tu código para ver la salida...</div>
         let inputResolver = null;
         
         // Funciones para canvas turtle flotante - CORREGIDAS
-        window.showTurtleCanvas = function() {
+        function showTurtleCanvas() {
             console.log('🐢 Mostrando canvas turtle...');
             const container = document.getElementById('turtle-container');
             const overlay = document.getElementById('canvas-overlay');
@@ -609,7 +609,10 @@ Ejecuta tu código para ver la salida...</div>
                 console.error('❌ No se encontraron elementos del canvas');
                 return false;
             }
-        };
+        }
+        
+        // Hacer la función disponible globalmente
+        window.showTurtleCanvas = showTurtleCanvas;
         
         window.closeTurtleCanvas = function() {
             console.log('🐢 Cerrando canvas turtle...');
@@ -896,31 +899,32 @@ class Turtle:
         
     def _ensure_canvas(self):
         # SIEMPRE mostrar el canvas cuando se use turtle
-        canvas_shown = js.showTurtleCanvas()
-        
-        if not canvas_shown:
-            print("❌ Error: No se pudo mostrar el canvas")
-            return False
+        try:
+            # Llamar directamente a la función JavaScript
+            js.eval("showTurtleCanvas()")
             
-        # Obtener referencias al canvas
-        self.canvas = js.document.getElementById('turtle-canvas')
-        if self.canvas:
-            self.ctx = self.canvas.getContext('2d')
-            
-            # Configurar canvas con fondo blanco
-            self.ctx.fillStyle = 'white'
-            self.ctx.fillRect(0, 0, 800, 600)
-            
-            # Configurar estilo de dibujo
-            self.ctx.strokeStyle = self.current_color
-            self.ctx.lineWidth = 2
-            self.ctx.lineCap = 'round'
-            self.ctx.lineJoin = 'round'
-            
-            print("✅ Canvas turtle inicializado")
-            return True
-        else:
-            print("❌ Error: Canvas no encontrado")
+            # Obtener referencias al canvas
+            self.canvas = js.document.getElementById('turtle-canvas')
+            if self.canvas:
+                self.ctx = self.canvas.getContext('2d')
+                
+                # Configurar canvas con fondo blanco
+                self.ctx.fillStyle = 'white'
+                self.ctx.fillRect(0, 0, 800, 600)
+                
+                # Configurar estilo de dibujo
+                self.ctx.strokeStyle = self.current_color
+                self.ctx.lineWidth = 2
+                self.ctx.lineCap = 'round'
+                self.ctx.lineJoin = 'round'
+                
+                print("✅ Canvas turtle inicializado")
+                return True
+            else:
+                print("❌ Error: Canvas no encontrado")
+                return False
+        except Exception as e:
+            print(f"❌ Error al mostrar canvas: {e}")
             return False
         
     def forward(self, distance):

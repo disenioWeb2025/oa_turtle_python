@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -230,7 +231,18 @@
             display: none;
         }
 
-        /* Turtle canvas flotante y más grande */
+        /* Canvas flotante para turtle - CORREGIDO */
+        .canvas-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+        }
+
         #turtle-container {
             position: fixed;
             top: 50%;
@@ -239,28 +251,17 @@
             z-index: 1001;
             display: none;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            padding: 0;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            padding: 10px;
         }
         
         #turtle-canvas {
             border: 3px solid #2196F3;
-            border-radius: 6px;
+            border-radius: 8px;
             background-color: white !important;
             display: block;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .canvas-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
         }
 
         .canvas-close-btn {
@@ -280,10 +281,12 @@
             align-items: center;
             justify-content: center;
             z-index: 1002;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .canvas-close-btn:hover {
             background: #d32f2f;
+            transform: scale(1.1);
         }
 
         .btn {
@@ -377,14 +380,6 @@
             color: #155724;
         }
 
-        /* Turtle canvas styling */
-        #turtle-canvas {
-            border: 1px solid #ccc;
-            background: white;
-            margin-top: 10px;
-            display: none;
-        }
-
         @media (max-width: 1024px) {
             .header {
                 flex-direction: column;
@@ -416,6 +411,18 @@
             .btn {
                 flex: 1;
                 min-width: 0;
+            }
+
+            #turtle-container {
+                width: 95%;
+                height: auto;
+            }
+
+            #turtle-canvas {
+                width: 100%;
+                height: auto;
+                max-width: 400px;
+                max-height: 300px;
             }
         }
 
@@ -507,11 +514,14 @@
                     <p>Programa interactivo</p>
                 </div>
 
-
-
                 <div class="example-item" onclick="cargarEjemplo('turtle_ejemplo')">
                     <h4>🐢 Turtle Graphics</h4>
                     <p>Dibujos con turtle</p>
+                </div>
+
+                <div class="example-item" onclick="cargarEjemplo('turtle_simple')">
+                    <h4>🐢 Turtle Simple</h4>
+                    <p>Cuadrado básico</p>
                 </div>
             </div>
 
@@ -538,6 +548,7 @@ print(f"{a} * {b} = {a * b}")</textarea>
             <div class="output-panel">
                 <h3>🖥️ Salida del Programa</h3>
                 <div id="output" class="output-content">Python 3.10 | Pyodide
+🐢 Turtle graphics disponible
 Ejecuta tu código para ver la salida...</div>
                 <div id="input-section" class="input-section input-hidden">
                     <div class="input-prompt" id="input-prompt">Introduce un valor:</div>
@@ -554,192 +565,64 @@ Ejecuta tu código para ver la salida...</div>
         <p>Elizabeth Izquierdo 2025</p>
     </footer>
 
-    <!-- Canvas flotante para turtle -->
+    <!-- Canvas flotante para turtle - ESTRUCTURA CORREGIDA -->
     <div class="canvas-overlay" id="canvas-overlay" onclick="closeTurtleCanvas()"></div>
     <div id="turtle-container">
-        <canvas id="turtle-canvas" width="800" height="600" style="border: 3px solid #2196F3; background: white; display: block;"></canvas>
         <button class="canvas-close-btn" onclick="closeTurtleCanvas()">×</button>
+        <canvas id="turtle-canvas" width="800" height="600"></canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
     <script>
         let pyodide;
         let isLoading = true;
-        let turtleCanvas;
-        let turtleContext;
-        let turtleX = 200;
-        let turtleY = 150;
-        let turtleAngle = 0;
-        let turtlePenDown = true;
         
-        // Initialize turtle canvas
-        function initTurtle() {
-            turtleCanvas = document.getElementById('turtle-canvas');
-            turtleContext = turtleCanvas.getContext('2d');
-            turtleContext.strokeStyle = 'black';
-            turtleContext.lineWidth = 2;
-            turtleX = 200;
-            turtleY = 150;
-            turtleAngle = 0;
-            turtlePenDown = true;
-        }
-
-        // Turtle graphics implementation for Pyodide
-        function setupTurtleModule() {
-            const turtleModule = `
-import math
-import js
-
-class Turtle:
-    def __init__(self):
-        self.x = 400  # Centro del canvas más grande
-        self.y = 300
-        self.angle = 0
-        self.pen_down = True
-        self.canvas = None
-        self.ctx = None
-        
-    def _ensure_canvas(self):
-        # Siempre mostrar el canvas cuando se use cualquier función turtle
-        js.showTurtleCanvas()
-        
-        if self.canvas is None:
-            self.canvas = js.document.getElementById('turtle-canvas')
-            self.ctx = self.canvas.getContext('2d')
-            # Solo limpiar el canvas la primera vez que se inicializa
-            self.ctx.fillStyle = 'white'
-            self.ctx.fillRect(0, 0, 800, 600)
-            # Configurar estilo inicial de dibujo
-            self.ctx.strokeStyle = 'black'
-            self.ctx.lineWidth = 2
-            self.current_color = 'black'
-            print("Canvas turtle inicializado correctamente")
-        
-        # Mantener el color actual
-        if hasattr(self, 'current_color'):
-            self.ctx.strokeStyle = self.current_color
-        self.ctx.lineWidth = 2
-        
-    def forward(self, distance):
-        self._ensure_canvas()
-        
-        new_x = self.x + distance * math.cos(math.radians(self.angle))
-        new_y = self.y + distance * math.sin(math.radians(self.angle))
-        
-        if self.pen_down:
-            self.ctx.beginPath()
-            self.ctx.moveTo(self.x, self.y)
-            self.ctx.lineTo(new_x, new_y)
-            self.ctx.stroke()
-        
-        self.x = new_x
-        self.y = new_y
-    
-    def backward(self, distance):
-        self.forward(-distance)
-    
-    def right(self, angle):
-        self.angle += angle
-    
-    def left(self, angle):
-        self.angle -= angle
-    
-    def penup(self):
-        self.pen_down = False
-    
-    def pendown(self):
-        self.pen_down = True
-    
-    def goto(self, x, y):
-        self._ensure_canvas()
-        if self.pen_down:
-            self.ctx.beginPath()
-            self.ctx.moveTo(self.x, self.y)
-            self.ctx.lineTo(x + 400, 300 - y)
-            self.ctx.stroke()
-        self.x = x + 400
-        self.y = 300 - y
-    
-    def circle(self, radius):
-        self._ensure_canvas()
-        self.ctx.beginPath()
-        self.ctx.arc(self.x, self.y, abs(radius), 0, 2 * math.pi)
-        self.ctx.stroke()
-    
-    def color(self, color):
-        self._ensure_canvas()
-        self.current_color = str(color)
-        self.ctx.strokeStyle = self.current_color
-        self.ctx.fillStyle = self.current_color
-        print(f"Color cambiado a: {color}")
-    
-    def clear(self):
-        self._ensure_canvas()
-        self.ctx.fillStyle = 'white'
-        self.ctx.fillRect(0, 0, 800, 600)
-        # Resetear a color negro por defecto
-        self.current_color = 'black'
-        self.ctx.strokeStyle = self.current_color
-        self.ctx.lineWidth = 2
-        self.x = 400
-        self.y = 300
-        self.angle = 0
-
-# Global turtle instance
-_turtle = Turtle()
-
-# Turtle module functions
-def forward(distance):
-    _turtle.forward(distance)
-
-def backward(distance):
-    _turtle.backward(distance)
-
-def right(angle):
-    _turtle.right(angle)
-
-def left(angle):
-    _turtle.left(angle)
-
-def penup():
-    _turtle.penup()
-
-def pendown():
-    _turtle.pendown()
-
-def goto(x, y):
-    _turtle.goto(x, y)
-
-def circle(radius):
-    _turtle.circle(radius)
-
-def color(color):
-    _turtle.color(color)
-
-def clear():
-    _turtle.clear()
-
-def reset():
-    _turtle.clear()
-    _turtle.x = 200
-    _turtle.y = 150
-    _turtle.angle = 0
-    _turtle.pen_down = True
-
-# Aliases
-fd = forward
-bk = backward
-rt = right
-lt = left
-pu = penup
-pd = pendown
-`;
-            return turtleModule;
-        }
-
         // Variables globales para input
         let inputResolver = null;
         
+        // Funciones para canvas turtle flotante - CORREGIDAS
+        window.showTurtleCanvas = function() {
+            console.log('🐢 Mostrando canvas turtle...');
+            const container = document.getElementById('turtle-container');
+            const overlay = document.getElementById('canvas-overlay');
+            const canvas = document.getElementById('turtle-canvas');
+            
+            if (container && overlay && canvas) {
+                // Asegurarse de que el canvas esté configurado correctamente
+                canvas.width = 800;
+                canvas.height = 600;
+                
+                // Mostrar el overlay y container
+                overlay.style.display = 'block';
+                container.style.display = 'block';
+                
+                console.log('✅ Canvas mostrado correctamente');
+                console.log('Canvas dimensiones:', canvas.width, 'x', canvas.height);
+                
+                // Forzar un repintado del canvas
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                return true;
+            } else {
+                console.error('❌ No se encontraron elementos del canvas');
+                return false;
+            }
+        };
+        
+        window.closeTurtleCanvas = function() {
+            console.log('🐢 Cerrando canvas turtle...');
+            const container = document.getElementById('turtle-container');
+            const overlay = document.getElementById('canvas-overlay');
+            
+            if (container && overlay) {
+                container.style.display = 'none';
+                overlay.style.display = 'none';
+                console.log('✅ Canvas cerrado');
+            }
+        };
+
         // Función para mostrar input integrado
         function showInputSection(promptText) {
             const inputSection = document.getElementById('input-section');
@@ -760,7 +643,6 @@ pd = pendown
             
             const value = inputField.value;
             
-            // Mostrar la respuesta en la salida para integración visual
             if (outputElement && value) {
                 const currentText = outputElement.textContent;
                 if (currentText && !currentText.endsWith('\n')) {
@@ -775,60 +657,6 @@ pd = pendown
             if (inputResolver) {
                 inputResolver(value);
                 inputResolver = null;
-            }
-        }
-        
-        // Función Python input que usa la interfaz integrada
-        window.pythonInput = function(promptText) {
-            return new Promise((resolve) => {
-                inputResolver = resolve;
-                showInputSection(promptText);
-                
-                // También permitir enviar con Enter
-                const inputField = document.getElementById('input-field');
-                const handleKeyPress = (e) => {
-                    if (e.key === 'Enter') {
-                        inputField.removeEventListener('keypress', handleKeyPress);
-                        submitInput();
-                    }
-                };
-                inputField.addEventListener('keypress', handleKeyPress);
-            });
-        };
-        
-        // Funciones para canvas turtle flotante
-        function showTurtleCanvas() {
-            console.log('Mostrando canvas turtle...');
-            const container = document.getElementById('turtle-container');
-            const overlay = document.getElementById('canvas-overlay');
-            const canvas = document.getElementById('turtle-canvas');
-            
-            if (container && overlay && canvas) {
-                container.style.display = 'block';
-                overlay.style.display = 'block';
-                console.log('Canvas container mostrado:', container.style.display);
-                console.log('Canvas dimensiones:', canvas.width, 'x', canvas.height);
-            } else {
-                console.error('No se encontraron elementos del canvas');
-            }
-        }
-        
-        function closeTurtleCanvas() {
-            console.log('Cerrando canvas turtle...');
-            document.getElementById('turtle-container').style.display = 'none';
-            document.getElementById('canvas-overlay').style.display = 'none';
-            // Resetear las referencias del canvas para que se pueda reinicializar
-            if (window.pyodide && pyodide.runPython) {
-                try {
-                    pyodide.runPython(`
-if '_turtle' in globals():
-    _turtle.canvas = None
-    _turtle.ctx = None
-    print("Canvas reseteado para próxima ejecución")
-                    `);
-                } catch (e) {
-                    console.log('Error al resetear canvas:', e);
-                }
             }
         }
 
@@ -969,7 +797,21 @@ try:
 except ValueError:
     print("Error: Por favor ingresa números válidos")`,
 
+            turtle_simple: `# Turtle Simple - Cuadrado
+import turtle
 
+print("🐢 Dibujando un cuadrado...")
+
+# Limpiar y preparar canvas
+turtle.clear()
+
+# Dibujar un cuadrado azul
+turtle.color('blue')
+for i in range(4):
+    turtle.forward(100)
+    turtle.right(90)
+
+print("✅ ¡Cuadrado dibujado!")`,
 
             turtle_ejemplo: `# Turtle Graphics - Dibujos con turtle
 import turtle
@@ -1036,133 +878,263 @@ print("- clear()") `
             }
         }
 
+        // Turtle graphics implementation para Pyodide - CORREGIDA
+        function setupTurtleModule() {
+            const turtleModule = `
+import math
+import js
+
+class Turtle:
+    def __init__(self):
+        self.x = 400  # Centro del canvas
+        self.y = 300
+        self.angle = 0
+        self.pen_down = True
+        self.canvas = None
+        self.ctx = None
+        self.current_color = 'black'
+        
+    def _ensure_canvas(self):
+        # SIEMPRE mostrar el canvas cuando se use turtle
+        canvas_shown = js.showTurtleCanvas()
+        
+        if not canvas_shown:
+            print("❌ Error: No se pudo mostrar el canvas")
+            return False
+            
+        # Obtener referencias al canvas
+        self.canvas = js.document.getElementById('turtle-canvas')
+        if self.canvas:
+            self.ctx = self.canvas.getContext('2d')
+            
+            # Configurar canvas con fondo blanco
+            self.ctx.fillStyle = 'white'
+            self.ctx.fillRect(0, 0, 800, 600)
+            
+            # Configurar estilo de dibujo
+            self.ctx.strokeStyle = self.current_color
+            self.ctx.lineWidth = 2
+            self.ctx.lineCap = 'round'
+            self.ctx.lineJoin = 'round'
+            
+            print("✅ Canvas turtle inicializado")
+            return True
+        else:
+            print("❌ Error: Canvas no encontrado")
+            return False
+        
+    def forward(self, distance):
+        if not self._ensure_canvas():
+            return
+            
+        # Calcular nueva posición
+        rad_angle = math.radians(self.angle)
+        new_x = self.x + distance * math.cos(rad_angle)
+        new_y = self.y + distance * math.sin(rad_angle)
+        
+        # Dibujar línea si el lápiz está abajo
+        if self.pen_down:
+            self.ctx.beginPath()
+            self.ctx.moveTo(self.x, self.y)
+            self.ctx.lineTo(new_x, new_y)
+            self.ctx.stroke()
+        
+        # Actualizar posición
+        self.x = new_x
+        self.y = new_y
+    
+    def backward(self, distance):
+        self.forward(-distance)
+    
+    def right(self, angle):
+        self.angle += angle
+    
+    def left(self, angle):
+        self.angle -= angle
+    
+    def penup(self):
+        self.pen_down = False
+    
+    def pendown(self):
+        self.pen_down = True
+    
+    def goto(self, x, y):
+        if not self._ensure_canvas():
+            return
+            
+        # Convertir coordenadas (centro del canvas como origen)
+        canvas_x = x + 400
+        canvas_y = 300 - y
+        
+        if self.pen_down:
+            self.ctx.beginPath()
+            self.ctx.moveTo(self.x, self.y)
+            self.ctx.lineTo(canvas_x, canvas_y)
+            self.ctx.stroke()
+        
+        self.x = canvas_x
+        self.y = canvas_y
+    
+    def circle(self, radius):
+        if not self._ensure_canvas():
+            return
+            
+        self.ctx.beginPath()
+        self.ctx.arc(self.x, self.y, abs(radius), 0, 2 * math.pi)
+        if self.pen_down:
+            self.ctx.stroke()
+    
+    def color(self, color_name):
+        if not self._ensure_canvas():
+            return
+            
+        self.current_color = str(color_name)
+        self.ctx.strokeStyle = self.current_color
+        self.ctx.fillStyle = self.current_color
+        print(f"🎨 Color cambiado a: {color_name}")
+    
+    def clear(self):
+        if not self._ensure_canvas():
+            return
+            
+        # Limpiar todo el canvas
+        self.ctx.fillStyle = 'white'
+        self.ctx.fillRect(0, 0, 800, 600)
+        
+        # Resetear turtle
+        self.x = 400
+        self.y = 300
+        self.angle = 0
+        self.pen_down = True
+        self.current_color = 'black'
+        self.ctx.strokeStyle = self.current_color
+        self.ctx.lineWidth = 2
+        
+        print("🧹 Canvas limpiado")
+
+# Instancia global de turtle
+_turtle = Turtle()
+
+# Funciones del módulo turtle
+def forward(distance):
+    _turtle.forward(distance)
+
+def backward(distance):
+    _turtle.backward(distance)
+
+def right(angle):
+    _turtle.right(angle)
+
+def left(angle):
+    _turtle.left(angle)
+
+def penup():
+    _turtle.penup()
+
+def pendown():
+    _turtle.pendown()
+
+def goto(x, y):
+    _turtle.goto(x, y)
+
+def circle(radius):
+    _turtle.circle(radius)
+
+def color(color_name):
+    _turtle.color(color_name)
+
+def clear():
+    _turtle.clear()
+
+def reset():
+    _turtle.clear()
+
+# Aliases comunes
+fd = forward
+bk = backward
+rt = right
+lt = left
+pu = penup
+pd = pendown
+`;
+            return turtleModule;
+        }
+
         async function inicializarPyodide() {
             const outputElement = document.getElementById('output');
             const statusElement = document.getElementById('status');
             
             try {
                 statusElement.textContent = 'Cargando Python...';
-                statusElement.className = 'status loading';
+                statusElement.className = 'status-top loading';
                 
                 pyodide = await loadPyodide();
                 
-                // Instalar paquetes necesarios
                 statusElement.textContent = 'Instalando librerías...';
                 await pyodide.loadPackage(['matplotlib', 'numpy']);
                 
                 statusElement.textContent = 'Configurando módulos...';
                 
-                // Configurar turtle module personalizado PRIMERO
+                // Configurar turtle module personalizado
                 pyodide.runPython(`
 import sys
 import types
 
-# Crear el módulo turtle personalizado
+# Crear módulo turtle personalizado
 ${setupTurtleModule()}
 
-# Crear un módulo turtle que se puede importar
+# Crear módulo turtle que se puede importar
 turtle_module = types.ModuleType('turtle')
 
-# Agregar todas las funciones turtle al módulo
-for name in dir():
-    if not name.startswith('_') and name in [
-        'Turtle', 'forward', 'backward', 'right', 'left', 'penup', 'pendown', 
-        'goto', 'circle', 'color', 'clear', 'reset', 'fd', 'bk', 'rt', 'lt', 'pu', 'pd'
-    ]:
-        setattr(turtle_module, name, globals()[name])
+# Agregar todas las funciones al módulo
+turtle_functions = [
+    'Turtle', 'forward', 'backward', 'right', 'left', 'penup', 'pendown', 
+    'goto', 'circle', 'color', 'clear', 'reset', 'fd', 'bk', 'rt', 'lt', 'pu', 'pd'
+]
 
-# Registrar el módulo en sys.modules para que import turtle funcione
+for func_name in turtle_functions:
+    if func_name in globals():
+        setattr(turtle_module, func_name, globals()[func_name])
+
+# Registrar módulo en sys.modules
 sys.modules['turtle'] = turtle_module
 
-print("Módulo turtle personalizado registrado correctamente")
+print("🐢 Módulo turtle registrado correctamente")
                 `);
                 
-                // Configurar input integrado con interfaz personalizada
+                // Configurar input
                 pyodide.runPython(`
 import builtins
-from pyodide.ffi import create_proxy
-import asyncio
-
-# Variable global para almacenar la respuesta del input
-_input_response = None
-_input_waiting = False
 
 def input(prompt=''):
-    global _input_response, _input_waiting
     import js
+    import sys
     
-    # Mostrar el prompt en la salida
-    print(str(prompt), end='', flush=True)
+    # Mostrar prompt en stdout
+    sys.stdout.write(str(prompt))
+    sys.stdout.flush()
     
-    # Mostrar la interfaz de input
-    input_section = js.document.getElementById('input-section')
-    input_prompt = js.document.getElementById('input-prompt') 
-    input_field = js.document.getElementById('input-field')
+    # Usar prompt del navegador
+    result = js.window.prompt(str(prompt)) or ""
     
-    input_prompt.textContent = str(prompt)
-    input_field.value = ""
-    input_section.classList.remove('input-hidden')
-    input_field.focus()
+    # Mostrar resultado
+    sys.stdout.write(str(result) + '\\n')
+    sys.stdout.flush()
     
-    # Resetear variables
-    _input_response = None
-    _input_waiting = True
-    
-    # Usar prompt como respaldo por limitaciones de Pyodide
-    try:
-        result = js.window.prompt(str(prompt)) or ""
-        # Mostrar la respuesta en la salida para que se vea integrada
-        print(result)
-        return str(result)
-    finally:
-        # Ocultar la interfaz
-        input_section.classList.add('input-hidden')
+    return str(result)
 
 builtins.input = input
-
-# Función para manejar respuestas de input desde JavaScript
-def handle_input_response(response):
-    global _input_response, _input_waiting
-    _input_response = str(response)
-    _input_waiting = False
-    return _input_response
-
-js.handleInputResponse = create_proxy(handle_input_response)
-                `);
-                
-                // Configurar matplotlib para mostrar gráficos
-                pyodide.runPython(`
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import io
-import base64
-import js
-
-def show_plot():
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight', dpi=100)
-    buf.seek(0)
-    img_str = base64.b64encode(buf.read()).decode()
-    buf.close()
-    plt.close()
-    
-    # Mostrar imagen en el output
-    js.document.getElementById('output').innerHTML += f'<img src="data:image/png;base64,{img_str}" style="max-width:100%; margin:10px 0; background:white; border-radius:5px;">'
-
-# Sobrescribir plt.show()
-plt.show = show_plot
                 `);
                 
                 statusElement.textContent = '✅ Python listo';
-                statusElement.className = 'status ready';
+                statusElement.className = 'status-top ready';
                 isLoading = false;
                 outputElement.textContent = 'Python 3.10 | Pyodide\n🐢 Turtle graphics disponible\nEjecuta tu código para ver la salida...';
                 
             } catch (error) {
-                outputElement.textContent = `Error al cargar Python: ${error.message}`;
+                outputElement.textContent = `❌ Error al cargar Python: ${error.message}`;
                 statusElement.textContent = '❌ Error al cargar';
-                statusElement.className = 'status error';
+                statusElement.className = 'status-top error';
             }
         }
 
@@ -1179,55 +1151,19 @@ plt.show = show_plot
             runBtn.disabled = true;
             runBtn.textContent = '⏳ Ejecutando...';
             
-            // Limpiar output anterior
             outputElement.textContent = 'Ejecutando código...\n\n';
-            
-            // Ocultar input section si estaba visible
             document.getElementById('input-section').classList.add('input-hidden');
 
             try {
-                // Configurar input personalizado para esta ejecución
+                // Configurar captura de salida
                 pyodide.runPython(`
 import sys
 from io import StringIO
-import builtins
 
-# Variable global para manejar input
-_input_promise = None
-
-def input(prompt=''):
-    import js
-    
-    # Mostrar el prompt en stdout primero
-    sys.stdout.write(str(prompt))
-    sys.stdout.flush()
-    
-    # Mostrar la interfaz de input
-    input_section = js.document.getElementById('input-section')
-    input_prompt_elem = js.document.getElementById('input-prompt') 
-    input_field = js.document.getElementById('input-field')
-    
-    input_prompt_elem.textContent = str(prompt)
-    input_field.value = ""
-    input_section.classList.remove('input-hidden')
-    input_field.focus()
-    
-    # Usar prompt como fallback por ahora - mejor que no funcione
-    result = js.window.prompt(str(prompt)) or ""
-    input_section.classList.add('input-hidden')
-    
-    # Mostrar el resultado en stdout
-    sys.stdout.write(str(result) + '\\n')
-    sys.stdout.flush()
-    
-    return str(result)
-
-# Reemplazar input built-in
-builtins.input = input
-
-# Capturar stdout/stderr
 stdout_buffer = StringIO()
 stderr_buffer = StringIO()
+original_stdout = sys.stdout
+original_stderr = sys.stderr
 sys.stdout = stdout_buffer
 sys.stderr = stderr_buffer
                 `);
@@ -1235,25 +1171,26 @@ sys.stderr = stderr_buffer
                 // Ejecutar código del usuario
                 pyodide.runPython(codigo);
                 
-                // Obtener output
+                // Obtener salidas
                 const stdout = pyodide.runPython("stdout_buffer.getvalue()");
                 const stderr = pyodide.runPython("stderr_buffer.getvalue()");
                 
                 // Restaurar stdout/stderr
                 pyodide.runPython(`
-sys.stdout = sys.__stdout__
-sys.stderr = sys.__stderr__
+sys.stdout = original_stdout
+sys.stderr = original_stderr
                 `);
                 
                 // Mostrar resultados
                 let output = '';
                 if (stdout) output += stdout;
-                if (stderr) output += '\nError: ' + stderr;
+                if (stderr) output += '\n❌ Error: ' + stderr;
                 
-                outputElement.textContent = output || 'Código ejecutado sin salida.';
+                outputElement.textContent = output || '✅ Código ejecutado sin salida en consola.';
                 
             } catch (error) {
-                outputElement.textContent = `Error: ${error.message}`;
+                outputElement.textContent = `❌ Error: ${error.message}`;
+                console.error('Error completo:', error);
             } finally {
                 runBtn.disabled = false;
                 runBtn.textContent = '▶️ Ejecutar';
@@ -1262,8 +1199,8 @@ sys.stderr = sys.__stderr__
 
         function limpiarEditor() {
             document.getElementById('code-editor').value = '';
-            document.getElementById('output').innerHTML = 'Python 3.10 | Pyodide\nEjecuta tu código para ver la salida...';
-            document.getElementById('turtle-canvas').style.display = 'none';
+            document.getElementById('output').textContent = 'Python 3.10 | Pyodide\n🐢 Turtle graphics disponible\nEjecuta tu código para ver la salida...';
+            closeTurtleCanvas();
         }
 
         function descargarCodigo() {
@@ -1286,12 +1223,10 @@ sys.stderr = sys.__stderr__
                 return;
             }
 
-            // Codificar el código en base64 para incluirlo en la URL
             const codigoBase64 = btoa(encodeURIComponent(codigo));
             const urlActual = window.location.href.split('?')[0];
             const urlCompartir = `${urlActual}?code=${codigoBase64}`;
 
-            // Crear modal para mostrar opciones de compartir
             const modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed;
@@ -1318,31 +1253,26 @@ sys.stderr = sys.__stderr__
 
             contenido.innerHTML = `
                 <h3 style="margin-top: 0; color: #333; text-align: center;">🔗 Compartir tu Programa</h3>
-                <p style="color: #666; margin-bottom: 20px;">Usa este enlace para compartir tu programa con otros:</p>
+                <p style="color: #666; margin-bottom: 20px;">Usa este enlace para compartir tu programa:</p>
                 <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; word-break: break-all; font-family: monospace; font-size: 12px;">
                     ${urlCompartir}
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="copiarEnlace('${urlCompartir}')" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                    <button onclick="navigator.clipboard.writeText('${urlCompartir}').then(() => alert('¡Enlace copiado!'))" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
                         📋 Copiar Enlace
                     </button>
-                    <button onclick="abrirEnNuevaVentana('${urlCompartir}')" style="background: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                    <button onclick="window.open('${urlCompartir}', '_blank')" style="background: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
                         🔗 Abrir en Nueva Pestaña
                     </button>
-                    <button onclick="cerrarModal()" style="background: #f44336; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                    <button onclick="this.closest('div[style*=\"z-index: 9999\"]').remove()" style="background: #f44336; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
                         ❌ Cerrar
                     </button>
-                </div>
-                <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
-                    <h4 style="margin-top: 0; color: #1976d2;">💡 Código para Embebir:</h4>
-                    <textarea readonly style="width: 100%; height: 80px; border: 1px solid #ddd; padding: 8px; border-radius: 4px; font-family: monospace; font-size: 11px; resize: vertical;">&lt;iframe src="${urlCompartir}" width="800" height="600" frameborder="0"&gt;&lt;/iframe&gt;</textarea>
                 </div>
             `;
 
             modal.appendChild(contenido);
             document.body.appendChild(modal);
 
-            // Cerrar modal al hacer click fuera del contenido
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     document.body.removeChild(modal);
@@ -1350,33 +1280,7 @@ sys.stderr = sys.__stderr__
             });
         }
 
-        function copiarEnlace(url) {
-            navigator.clipboard.writeText(url).then(() => {
-                alert('¡Enlace copiado al portapapeles!');
-            }).catch(() => {
-                // Fallback para navegadores que no soportan clipboard API
-                const input = document.createElement('input');
-                input.value = url;
-                document.body.appendChild(input);
-                input.select();
-                document.execCommand('copy');
-                document.body.removeChild(input);
-                alert('¡Enlace copiado al portapapeles!');
-            });
-        }
-
-        function abrirEnNuevaVentana(url) {
-            window.open(url, '_blank');
-        }
-
-        function cerrarModal() {
-            const modal = document.querySelector('div[style*="z-index: 9999"]');
-            if (modal) {
-                document.body.removeChild(modal);
-            }
-        }
-
-        // Función para cargar código desde URL compartida
+        // Función para cargar código compartido
         function cargarCodigoCompartido() {
             const urlParams = new URLSearchParams(window.location.search);
             const codigoCompartido = urlParams.get('code');
@@ -1386,7 +1290,6 @@ sys.stderr = sys.__stderr__
                     const codigoDecodificado = decodeURIComponent(atob(codigoCompartido));
                     document.getElementById('code-editor').value = codigoDecodificado;
                     
-                    // Mostrar notificación de que se cargó código compartido
                     const notificacion = document.createElement('div');
                     notificacion.style.cssText = `
                         position: fixed;
@@ -1404,7 +1307,6 @@ sys.stderr = sys.__stderr__
                     
                     document.body.appendChild(notificacion);
                     
-                    // Remover notificación después de 3 segundos
                     setTimeout(() => {
                         if (notificacion.parentNode) {
                             document.body.removeChild(notificacion);
@@ -1413,17 +1315,25 @@ sys.stderr = sys.__stderr__
                     
                 } catch (error) {
                     console.error('Error al cargar código compartido:', error);
-                    alert('Error al cargar el código compartido. El enlace podría estar dañado.');
+                    alert('Error al cargar el código compartido.');
                 }
             }
         }
 
+        // Permitir Enter en el input field
+        document.addEventListener('keypress', (e) => {
+            if (e.target.id === 'input-field' && e.key === 'Enter') {
+                submitInput();
+            }
+        });
+
         // Inicializar cuando la página se carga
         window.addEventListener('load', () => {
-            initTurtle();
+            console.log('🚀 Inicializando IDE Python...');
             inicializarPyodide();
             cargarCodigoCompartido();
         });
     </script>
 </body>
 </html>
+
